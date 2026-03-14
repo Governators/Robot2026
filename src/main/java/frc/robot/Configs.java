@@ -15,18 +15,18 @@ public final class Configs {
             double drivingFactor = ModuleConstants.kWheelDiameterMeters * Math.PI
                     / ModuleConstants.kDrivingMotorReduction;
             double turningFactor = 2 * Math.PI;
-            //double drivingVelocityFeedForward = 1 / ModuleConstants.kDriveWheelFreeSpeedRps; //USED IN 2025
+            double drivingVelocityFeedForward = 1 / ModuleConstants.kDriveWheelFreeSpeedRps; //USED IN 2025
             drivingConfig
                     .idleMode(IdleMode.kBrake)
-                    .smartCurrentLimit(50);
+                    .smartCurrentLimit(Constants.ModuleConstants.kDrivingMotorCurrentLimit);
             drivingConfig.encoder
                     .positionConversionFactor(drivingFactor) // meters
                     .velocityConversionFactor(drivingFactor / 60.0); // meters per second
             drivingConfig.closedLoop
-                    .feedbackSensor(com.revrobotics.spark.FeedbackSensor.kPrimaryEncoder)
-                    // These are example gains you may need to them for your own robot!
-                    .pid(0.04, 0, 0)
-                    .outputRange(-1, 1); //I removed velocityFF from inbetween .pis and .ouput range
+    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+    .pid(0.04, 0, 0)
+    .velocityFF(drivingVelocityFeedForward)
+    .outputRange(-1, 1);
 
             turningConfig
                     .idleMode(IdleMode.kBrake)

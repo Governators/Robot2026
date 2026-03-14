@@ -18,7 +18,7 @@ public class BallFondlerSubsystem extends SubsystemBase {
   private SparkMax loadingMotor; // Loads balls into shootingMotor
   // Also reverses for shooting? IDK
   private boolean isShooting = false; // Changes motor to on/off
-
+  
   /** Creates a new ExampleSubsystem. */
   public BallFondlerSubsystem() {
     intakeMotor = new SparkMax(DriveConstants.kIntakeMotorCanId, MotorType.kBrushless); // CAN 19

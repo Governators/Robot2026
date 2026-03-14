@@ -3,6 +3,12 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,21 +19,16 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.Constants.DriveConstants;
-import frc.robot.utils.WheeeeelUtils;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import frc.utils.WheeeeelUtils;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
+
 public class WheeeeelSubsystem extends SubsystemBase {
   
-  // Create WheeeeelModules
+  // Create MAXSwerveModules
   private final WheeeeelModule m_frontLeft = new WheeeeelModule(
       DriveConstants.kFrontLeftDrivingCanId,
       DriveConstants.kFrontLeftTurningCanId,
@@ -49,8 +50,6 @@ public class WheeeeelSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  //private final AHRSJNI m_gyro = new AHRSJNI();
-
   private final AHRS m_gyro = new AHRS(NavXComType.kMXP_SPI);
 
   // Slew rate filter variables for controlling lateral acceleration
@@ -75,8 +74,9 @@ public class WheeeeelSubsystem extends SubsystemBase {
       });
 
 
-  // Creates a new DriveSubsystem. 
+  /** Creates a new WheeeeelSubsystem. */
   public WheeeeelSubsystem() {
+
     //Load the RobotConfig from the GUI settings
     RobotConfig config;
     try {
@@ -111,9 +111,9 @@ public class WheeeeelSubsystem extends SubsystemBase {
           return false;
         },
         this // Reference to this subsystem to set requirements
-    );  
+    );
   }
- 
+
 public ChassisSpeeds getRobotRelativeSpeeds(){
    return DriveConstants.kDriveKinematics.toChassisSpeeds(
        m_frontLeft.getState(),
@@ -129,7 +129,6 @@ public void driveRobotRelative(ChassisSpeeds speeds) {
 }
   @Override
   public void periodic() {
-    
     // Update the odometry in the periodic block
     m_odometry.update(
         //Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)),
@@ -139,26 +138,27 @@ public void driveRobotRelative(ChassisSpeeds speeds) {
             m_frontRight.getPosition(),
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
-        });  
+        });
+
+    System.out.println("Front Left Module");
+    m_frontLeft.getPositionTurning();
+    m_frontLeft.getVelocityDrive();
   }
-/*
+
   /**
    * Returns the currently-estimated pose of the robot.
    *
    * @return The pose.
    */
-  
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
   }
-  
 
   /**
    * Resets the odometry to the specified pose.
    *
    * @param pose The pose to which to set the odometry.
    */
-  
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
         //Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)),
@@ -170,7 +170,7 @@ public void driveRobotRelative(ChassisSpeeds speeds) {
             m_rearRight.getPosition()
         },
         pose);
-  }  
+  }
 
   /**
    * Method to drive the robot using joystick info.
@@ -243,7 +243,7 @@ public void driveRobotRelative(ChassisSpeeds speeds) {
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, m_gyro.getRotation2d())
-            : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered)); 
+            : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);

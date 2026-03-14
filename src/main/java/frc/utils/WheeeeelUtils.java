@@ -1,4 +1,4 @@
-package frc.robot.utils;
+package frc.utils;
 
 public class WheeeeelUtils {
 
