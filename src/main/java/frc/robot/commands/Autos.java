@@ -1,20 +1,20 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
-import frc.robot.subsystems.BallFondlerSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.BallFondlerSubsystem;
 
 public final class Autos {
-  /** Example static factory for an autonomous command. */
-  public static Command exampleAuto(BallFondlerSubsystem subsystem) {
-    return Commands.sequence(subsystem.toggleShooter(), new ExampleCommand(subsystem)); //1d is temporary
-  }
+    private Autos() {
+        throw new UnsupportedOperationException("This is a utility class!");
+    }
 
-  private Autos() {
-    throw new UnsupportedOperationException("This is a utility class!");
-  }
+    public static Command exampleAuto(BallFondlerSubsystem subsystem) {
+        return Commands.sequence(
+            Commands.runOnce(subsystem::shooterOn, subsystem),
+            Commands.waitSeconds(1.0),
+            Commands.run(subsystem::feedShooter, subsystem).withTimeout(1.5),
+            Commands.runOnce(subsystem::stopAll, subsystem)
+        );
+    }
 }

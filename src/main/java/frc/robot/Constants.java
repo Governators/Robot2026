@@ -11,6 +11,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
+/*
+* LIMELIGHT OFFSETS TODO: IMPLEMENT DEAR JESUS
+* 4.75 inches to the right of the center line
+* 16 inches UP
+* 12.5 inches BACK from center
+ */
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean

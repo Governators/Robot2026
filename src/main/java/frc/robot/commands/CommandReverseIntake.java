@@ -3,27 +3,22 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.BallFondlerSubsystem;
 
-public class CommandShoot extends Command {
+public class CommandReverseIntake extends Command {
     private final BallFondlerSubsystem subsystem;
 
-    public CommandShoot(BallFondlerSubsystem subsystem) {
+    public CommandReverseIntake(BallFondlerSubsystem subsystem) {
         this.subsystem = subsystem;
         addRequirements(subsystem);
     }
 
     @Override
-    public void initialize() {
-        subsystem.shooterOn();
-    }
-
-    @Override
     public void execute() {
-        subsystem.feedShooter();
+        subsystem.intakeReverse();
     }
 
     @Override
     public void end(boolean interrupted) {
-        subsystem.stopAll();
+        subsystem.stopIntake();
     }
 
     @Override

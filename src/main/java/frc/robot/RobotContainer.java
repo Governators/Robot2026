@@ -8,6 +8,7 @@ import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.commands.Autos;
 import frc.robot.commands.CommandShoot;
 import frc.robot.subsystems.BallFondlerSubsystem;
+import frc.robot.subsystems.HookerSubsystem;
 import frc.robot.subsystems.WheeeeelSubsystem;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,6 +16,10 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.CommandIntake;
+import frc.robot.commands.CommandMoveHook;
+import frc.robot.commands.CommandMoveHook.Direction;
+import frc.robot.commands.CommandReverseIntake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -28,6 +33,7 @@ import frc.robot.Constants.OIConstants;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final BallFondlerSubsystem ballFondlerSubsystem = new BallFondlerSubsystem();
+  public static final HookerSubsystem hookerSubsystem = new HookerSubsystem();
 
   public final CommandXboxController m_driverController = new CommandXboxController(
       OIConstants.kDriverControllerPort); // kDriverControllerPort is int = 0
@@ -110,16 +116,16 @@ public class RobotContainer {
    * PS4} controllers
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(ballFondlerSubsystem::exampleCondition).onTrue(new
-    // ExampleCommand(ballFondlerSubsystem));
+    m_driverController.rightTrigger().whileTrue(new CommandShoot(ballFondlerSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is
-    // pressed,
-    // cancelling on release.
-    // Run once commands go HERE
-    m_driverController.rightTrigger().onTrue(new CommandShoot(ballFondlerSubsystem));  }
+    m_driverController.leftTrigger().whileTrue(new CommandIntake(ballFondlerSubsystem));
 
+    m_driverController.a().whileTrue(new CommandReverseIntake(ballFondlerSubsystem));
+
+    m_driverController.y().whileTrue(new CommandMoveHook(hookerSubsystem, Direction.UP));
+
+    m_driverController.x().whileTrue(new CommandMoveHook(hookerSubsystem, Direction.DOWN));
+}
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
