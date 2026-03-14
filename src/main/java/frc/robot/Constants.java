@@ -31,7 +31,7 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static final class HookConstants {
-    public static final int kHookMotorCanId = 5; // TODO: change to actual can id
+    public static final int kHookMotorCanId = 19; 
   }
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
