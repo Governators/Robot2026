@@ -4,30 +4,27 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.BallFondlerSubsystem;
 
 public class CommandShoot extends Command {
-    private final BallFondlerSubsystem subsystem;
 
-    public CommandShoot(BallFondlerSubsystem subsystem) {
-        this.subsystem = subsystem;
-        addRequirements(subsystem);
-    }
+  private final BallFondlerSubsystem subsystem;
 
-    @Override
-    public void initialize() {
-        subsystem.shooterOn();
-    }
+  public CommandShoot(BallFondlerSubsystem subsystem) {
+    this.subsystem = subsystem;
+    addRequirements(subsystem);
+  }
 
-    @Override
-    public void execute() {
-        subsystem.feedShooter();
-    }
+  @Override
+  public void execute() {
+    subsystem.shootFeed();
+    
+  }
 
-    @Override
-    public void end(boolean interrupted) {
-        subsystem.stopAll();
-    }
+  @Override
+  public void end(boolean interrupted) {
+    subsystem.stopAll();
+  }
 
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
 }

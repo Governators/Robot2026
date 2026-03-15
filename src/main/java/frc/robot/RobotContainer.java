@@ -7,9 +7,14 @@ package frc.robot;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.commands.Autos;
 import frc.robot.commands.CommandShoot;
+import frc.robot.commands.CommandStopShoot;
 import frc.robot.subsystems.BallFondlerSubsystem;
 import frc.robot.subsystems.HookerSubsystem;
 import frc.robot.subsystems.WheeeeelSubsystem;
+
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -40,6 +45,13 @@ public class RobotContainer {
 
   public WheeeeelSubsystem m_robotDrive;
 
+  public final CommandXboxController m_shooterController = new CommandXboxController(
+    OIConstants.kShootControllerPort);
+
+  
+
+
+    
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -94,13 +106,16 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
-                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true),
             m_robotDrive));
     configureBindings();
-
+    NamedCommands.registerCommand("shoot", new CommandShoot(ballFondlerSubsystem));
+    NamedCommands.registerCommand("stopShoot", new CommandStopShoot(ballFondlerSubsystem));
+    NamedCommands.registerCommand("intake", new CommandIntake(ballFondlerSubsystem));
+    
   }
 
   /**
@@ -116,16 +131,19 @@ public class RobotContainer {
    * PS4} controllers
    */
   private void configureBindings() {
-    m_driverController.rightTrigger().whileTrue(new CommandShoot(ballFondlerSubsystem));
+    m_shooterController.rightBumper()
+        .whileTrue(new CommandShoot(ballFondlerSubsystem));
 
-    m_driverController.leftTrigger().whileTrue(new CommandIntake(ballFondlerSubsystem));
+    m_shooterController.leftBumper()
+        .whileTrue(new CommandIntake(ballFondlerSubsystem));
 
-    m_driverController.a().whileTrue(new CommandReverseIntake(ballFondlerSubsystem));
+    m_shooterController.a()
+        .whileTrue(new CommandReverseIntake(ballFondlerSubsystem));
+    m_shooterController.b().whileTrue(new CommandMoveHook(hookerSubsystem, Direction.UP));
 
-    m_driverController.y().whileTrue(new CommandMoveHook(hookerSubsystem, Direction.UP));
+    m_shooterController.x().whileTrue(new CommandMoveHook(hookerSubsystem, Direction.DOWN));
+  }
 
-    m_driverController.x().whileTrue(new CommandMoveHook(hookerSubsystem, Direction.DOWN));
-}
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -133,6 +151,14 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(ballFondlerSubsystem);
+    //return Autos.exampleAuto(ballFondlerSubsystem);
+    return getAutoFondler();
+  }
+
+
+
+
+  public Command getAutoFondler() {
+    return new PathPlannerAuto("AutoFondler");
   }
 }

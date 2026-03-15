@@ -4,25 +4,26 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.BallFondlerSubsystem;
 
 public class CommandReverseIntake extends Command {
-    private final BallFondlerSubsystem subsystem;
 
-    public CommandReverseIntake(BallFondlerSubsystem subsystem) {
-        this.subsystem = subsystem;
-        addRequirements(subsystem);
-    }
+  private final BallFondlerSubsystem subsystem;
 
-    @Override
-    public void execute() {
-        subsystem.intakeReverse();
-    }
+  public CommandReverseIntake(BallFondlerSubsystem subsystem) {
+    this.subsystem = subsystem;
+    addRequirements(subsystem);
+  }
 
-    @Override
-    public void end(boolean interrupted) {
-        subsystem.stopIntake();
-    }
+  @Override
+  public void execute() {
+    subsystem.intakeReverse();
+  }
 
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
+  @Override
+  public void end(boolean interrupted) {
+    subsystem.stopIntake();
+  }
+
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
 }

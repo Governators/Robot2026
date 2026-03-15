@@ -8,82 +8,69 @@ import frc.robot.Constants.DriveConstants;
 
 public class BallFondlerSubsystem extends SubsystemBase {
 
-    private final SparkMax shootingMotor;
-    private final SparkMax intakeMotor;
-    private final SparkMax loadingMotor;
+  private final SparkMax shootingMotor;
+  private final SparkMax intakeMotor;
+  private final SparkMax loadingMotor;
 
-    private boolean shooterEnabled = false;
+  public BallFondlerSubsystem() {
+    intakeMotor = new SparkMax(DriveConstants.kIntakeMotorCanId, MotorType.kBrushless);
+    loadingMotor = new SparkMax(DriveConstants.kLoadingMotorCanId, MotorType.kBrushless);
+    shootingMotor = new SparkMax(DriveConstants.kShootingMotorCanId, MotorType.kBrushless);
 
-    // Tune these later if needed
-    private static final double SHOOT_SPEED = 1.0;
-    private static final double INTAKE_SPEED = -0.33;
-    private static final double LOAD_SPEED = 0.33;
-    private static final double REVERSE_INTAKE_SPEED = 0.33;
-    private static final double REVERSE_LOAD_SPEED = -0.33;
+    stopAll();
+  }
 
-    public BallFondlerSubsystem() {
-        intakeMotor = new SparkMax(DriveConstants.kIntakeMotorCanId, MotorType.kBrushless);
-        loadingMotor = new SparkMax(DriveConstants.kLoadingMotorCanId, MotorType.kBrushless);
-        shootingMotor = new SparkMax(DriveConstants.kShootingMotorCanId, MotorType.kBrushless);
+  // ===== SHOOTER =====
 
-        stopAll();
-    }
+  public void shooterOn() {
+    System.out.println("Shooter ON");
+    shootingMotor.set(1.0);
+  }
 
-    public void shooterOn() {
-        shooterEnabled = true;
-        shootingMotor.set(SHOOT_SPEED);
-    }
+  public void shooterOff() {
+    System.out.println("Shooter OFF");
+    shootingMotor.set(0.0);
+  }
 
-    public void shooterOff() {
-        shooterEnabled = false;
-        shootingMotor.set(0.0);
-    }
+  // ===== INTAKE =====
 
-    public void toggleShooter() {
-        if (shooterEnabled) {
-            shooterOff();
-        } else {
-            shooterOn();
-        }
-    }
+  public void intakeForward() {
+    System.out.println("Intake Forward");
+    intakeMotor.set(1);
+    loadingMotor.set(1);
+  }
 
-    public boolean isShooterEnabled() {
-        return shooterEnabled;
-    }
+  public void intakeReverse() {
+    System.out.println("Intake Reverse");
+    shootingMotor.set(-1);
+    intakeMotor.set(1);
+    loadingMotor.set(-1);
+  }
 
-    public void intakeIn() {
-        intakeMotor.set(INTAKE_SPEED);
-        loadingMotor.set(LOAD_SPEED);
-    }
+  // ===== SHOOT FEED =====
 
-    public void intakeReverse() {
-        intakeMotor.set(REVERSE_INTAKE_SPEED);
-        loadingMotor.set(REVERSE_LOAD_SPEED);
-    }
+  public void shootFeed() {
+    System.out.println("Shoot Feed");
+    shootingMotor.set(1.0);
+    loadingMotor.set(-1);
+    intakeMotor.set(1);
+  }
 
-    public void feedShooter() {
-        loadingMotor.set(LOAD_SPEED);
-    }
+  // ===== STOP =====
 
-    public void stopIntake() {
-        intakeMotor.set(0.0);
-        loadingMotor.set(0.0);
-    }
+  public void stopIntake() {
+    shootingMotor.set(0.0);
+    intakeMotor.set(0.0);
+    loadingMotor.set(0.0);
+  }
 
-    public void stopAll() {
-        intakeMotor.set(0.0);
-        loadingMotor.set(0.0);
-        shootingMotor.set(0.0);
-        shooterEnabled = false;
-    }
+  public void stopAll() {
+    intakeMotor.set(0.0);
+    loadingMotor.set(0.0);
+    shootingMotor.set(0.0);
+  }
 
-    public double getShootingMotorRPM() {
-        return shootingMotor.getEncoder().getVelocity();
-    }
-
-    @Override
-    public void periodic() {
-        // Uncomment if needed, but spammy as hell:
-        // System.out.println("Shooter RPM: " + getShootingMotorRPM());
-    }
+  public double getShootingMotorRPM() {
+    return shootingMotor.getEncoder().getVelocity();
+  }
 }

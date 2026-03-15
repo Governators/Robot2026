@@ -112,6 +112,7 @@ public class WheeeeelSubsystem extends SubsystemBase {
         },
         this // Reference to this subsystem to set requirements
     );
+    m_gyro.resetDisplacement();
   }
 
 public ChassisSpeeds getRobotRelativeSpeeds(){
