@@ -43,7 +43,7 @@ public class BallFondlerSubsystem extends SubsystemBase {
   public void intakeReverse() {
     System.out.println("Intake Reverse");
     shootingMotor.set(-1);
-    intakeMotor.set(1);
+    intakeMotor.set(-1);
     loadingMotor.set(-1);
   }
 
@@ -52,6 +52,7 @@ public class BallFondlerSubsystem extends SubsystemBase {
   public void shootFeed() {
     System.out.println("Shoot Feed");
     shootingMotor.set(1.0);
+    
     loadingMotor.set(-1);
     intakeMotor.set(1);
   }

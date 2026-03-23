@@ -12,6 +12,7 @@ public class CommandShoot extends Command {
     addRequirements(subsystem);
   }
 
+  // Calls shoot feed in BallFondlerSubsystem
   @Override
   public void execute() {
     subsystem.shootFeed();
