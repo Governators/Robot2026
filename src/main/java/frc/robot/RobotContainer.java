@@ -112,6 +112,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("stopShoot", new CommandStopShoot(ballFondlerSubsystem));
     NamedCommands.registerCommand("intake", new CommandIntake(ballFondlerSubsystem));
     NamedCommands.registerCommand("shootFeed", new CommandShootRpmFeed(ballFondlerSubsystem, ShooterConstants.kShortRpm));
+    ballFondlerSubsystem.rpmShoot(-2600);
   }
 
   /**
