@@ -140,7 +140,7 @@ public class RobotContainer {
     m_shooterController.b()
         .whileTrue(new CommandShootFeedSixty(ballFondlerSubsystem));
     m_shooterController.x()
-        .whileTrue(new CommandShoot(ballFondlerSubsystem));
+        .whileTrue(new CommandShootFeed(ballFondlerSubsystem));
   }
 
   /**
@@ -151,7 +151,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     //return Autos.exampleAuto(ballFondlerSubsystem);
-    return getAutoSit();
+    return getAutoFondler();
   }
 
 
