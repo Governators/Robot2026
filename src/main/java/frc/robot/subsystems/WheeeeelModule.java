@@ -99,8 +99,6 @@ public class WheeeeelModule {
 
     // Optimize the reference state to avoid spinning further than 90 degrees.
     correctedDesiredState.optimize(new Rotation2d(m_turningEncoder.getPosition()));
-    System.out.println("Speed in M/s " + correctedDesiredState.speedMetersPerSecond);
-    System.out.println("Angle in Radians" + correctedDesiredState.angle);
 
     // Command driving and turning SPARKS towards their respective setpoints.
     m_drivingClosedLoopController.setSetpoint(correctedDesiredState.speedMetersPerSecond, ControlType.kVelocity);

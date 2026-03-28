@@ -140,10 +140,6 @@ public void driveRobotRelative(ChassisSpeeds speeds) {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
-
-    System.out.println("Front Left Module");
-    m_frontLeft.getPositionTurning();
-    m_frontLeft.getVelocityDrive();
   }
 
   /**

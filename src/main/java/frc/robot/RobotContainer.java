@@ -89,7 +89,6 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureAutoCommands();
-    System.out.println("RobotContainer");
 
     // autoChooser = AutoBuilder.buildAutoChooser(auto);
 
