@@ -7,7 +7,7 @@ public class CommandReverseIntake extends Command {
 
   private final BallFondlerSubsystem subsystem;
 
-  // Literally CommandShoot in reverse
+  // intended to spit
   public CommandReverseIntake(BallFondlerSubsystem subsystem) {
     this.subsystem = subsystem;
     addRequirements(subsystem);

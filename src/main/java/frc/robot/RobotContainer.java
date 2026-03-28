@@ -6,10 +6,8 @@ package frc.robot;
 
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.commands.Autos;
-import frc.robot.commands.CommandFeed;
 import frc.robot.commands.CommandShoot;
-import frc.robot.commands.CommandShootFeed;
-import frc.robot.commands.CommandShootFeedSixty;
+import frc.robot.commands.CommandShootRpmFeed;
 import frc.robot.commands.CommandStopShoot;
 import frc.robot.subsystems.BallFondlerSubsystem;
 import frc.robot.subsystems.WheeeeelSubsystem;
@@ -23,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.CommandIntake;
 import frc.robot.commands.CommandReverseIntake;
 
@@ -110,10 +109,9 @@ public class RobotContainer {
                 true, true),
             m_robotDrive));
     configureBindings();
-    NamedCommands.registerCommand("shoot", new CommandShoot(ballFondlerSubsystem));
     NamedCommands.registerCommand("stopShoot", new CommandStopShoot(ballFondlerSubsystem));
     NamedCommands.registerCommand("intake", new CommandIntake(ballFondlerSubsystem));
-    NamedCommands.registerCommand("shootFeed", new CommandShootFeedSixty(ballFondlerSubsystem));
+    NamedCommands.registerCommand("shootFeed", new CommandShootRpmFeed(ballFondlerSubsystem, ShooterConstants.kShortRpm));
   }
 
   /**
@@ -138,9 +136,9 @@ public class RobotContainer {
     m_shooterController.a()
         .whileTrue(new CommandReverseIntake(ballFondlerSubsystem));
     m_shooterController.b()
-        .whileTrue(new CommandShootFeedSixty(ballFondlerSubsystem));
+        .whileTrue(new CommandShootRpmFeed(ballFondlerSubsystem, ShooterConstants.kShortRpm));
     m_shooterController.x()
-        .whileTrue(new CommandShootFeed(ballFondlerSubsystem));
+        .whileTrue(new CommandShootRpmFeed(ballFondlerSubsystem, ShooterConstants.kLongRpm));
   }
 
   /**

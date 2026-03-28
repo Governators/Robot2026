@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.LimelightHelpers;
 
 public class BallFondlerSubsystem extends SubsystemBase {
@@ -30,29 +31,13 @@ public class BallFondlerSubsystem extends SubsystemBase {
 
   // ===== SHOOTER =====
 
-  public void shooterOn(double d) {
-    shoot(-.6);
-  }
-  public void shooterOn() {
-    shoot(-.75);
-  }
-
-  public void shootFeed(double d) {
-    shoot(d);
+  public void rpmShootFeed(double d) {
+    rpmShoot(d);
     feed();
   }
 
-  private void shoot(double value) {
-    shootingMotor.set(value);
-  }
-
-  public void sixtyShooter() {
-    shoot(-.6);
-  }
-
-  public void shootFeed() {
-    shooterOn();
-    feed();
+  public void rpmShoot(double d) {
+    shootingController.setSetpoint(d, ControlType.kVelocity);
   }
 
   public void stopShootFeed() {
@@ -71,7 +56,7 @@ public class BallFondlerSubsystem extends SubsystemBase {
   }
 
   public void shooterOff() {
-    shootingMotor.set(0);
+    shootingController.setSetpoint(0, ControlType.kVelocity);
   }
 
   // ===== INTAKE =====
@@ -99,7 +84,7 @@ public class BallFondlerSubsystem extends SubsystemBase {
   public void stopAll() {
     intakeMotor.set(0.0);
     loadingMotor.set(0.0);
-    shootingMotor.set(0);
+    shootingController.setSetpoint(0, ControlType.kVelocity);
   }
 
  

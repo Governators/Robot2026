@@ -30,6 +30,14 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  public static final class ShooterConstants {
+    public static final double kShortSetpoint = -.6;
+    public static final double kLongSetpoint = -.7;
+    public static final double kIdleRpm = -250;
+    public static final double kShortRpm = -2600;
+    public static final double kLongRpm = -3100;
+  }
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds

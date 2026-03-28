@@ -9,13 +9,5 @@ public final class Autos {
         throw new UnsupportedOperationException("This is a utility class!");
     }
 
-    // Not renamed, has an actual auto in it
-    public static Command exampleAuto(BallFondlerSubsystem subsystem) {
-        return Commands.sequence(
-            Commands.runOnce(subsystem::shooterOn, subsystem),
-            Commands.waitSeconds(1.0),
-            Commands.run(subsystem::feed, subsystem).withTimeout(1.5),
-            Commands.runOnce(subsystem::stopAll, subsystem)
-        );
-    }
+    
 }
