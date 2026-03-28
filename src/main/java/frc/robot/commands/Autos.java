@@ -14,7 +14,7 @@ public final class Autos {
         return Commands.sequence(
             Commands.runOnce(subsystem::shooterOn, subsystem),
             Commands.waitSeconds(1.0),
-            Commands.run(subsystem::shootFeed, subsystem).withTimeout(1.5),
+            Commands.run(subsystem::feed, subsystem).withTimeout(1.5),
             Commands.runOnce(subsystem::stopAll, subsystem)
         );
     }

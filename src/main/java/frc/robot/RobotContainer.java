@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.commands.Autos;
+import frc.robot.commands.CommandFeed;
 import frc.robot.commands.CommandShoot;
 import frc.robot.commands.CommandStopShoot;
 import frc.robot.subsystems.BallFondlerSubsystem;
@@ -139,9 +140,8 @@ public class RobotContainer {
 
     m_shooterController.a()
         .whileTrue(new CommandReverseIntake(ballFondlerSubsystem));
-    m_shooterController.b().whileTrue(new CommandMoveHook(hookerSubsystem, Direction.UP));
-
-    m_shooterController.x().whileTrue(new CommandMoveHook(hookerSubsystem, Direction.DOWN));
+    m_shooterController.b()
+        .whileTrue(new CommandFeed(ballFondlerSubsystem));
   }
 
   /**
