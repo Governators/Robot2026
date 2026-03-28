@@ -9,9 +9,9 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.CommandFeed;
 import frc.robot.commands.CommandShoot;
 import frc.robot.commands.CommandShootFeed;
+import frc.robot.commands.CommandShootFeedSixty;
 import frc.robot.commands.CommandStopShoot;
 import frc.robot.subsystems.BallFondlerSubsystem;
-import frc.robot.subsystems.HookerSubsystem;
 import frc.robot.subsystems.WheeeeelSubsystem;
 
 import com.pathplanner.lib.auto.NamedCommands;
@@ -24,8 +24,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.CommandIntake;
-import frc.robot.commands.CommandMoveHook;
-import frc.robot.commands.CommandMoveHook.Direction;
 import frc.robot.commands.CommandReverseIntake;
 
 /**
@@ -40,7 +38,6 @@ import frc.robot.commands.CommandReverseIntake;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final BallFondlerSubsystem ballFondlerSubsystem = new BallFondlerSubsystem();
-  public static final HookerSubsystem hookerSubsystem = new HookerSubsystem();
 
   public final CommandXboxController m_driverController = new CommandXboxController(
       OIConstants.kDriverControllerPort); // kDriverControllerPort is int = 0
@@ -117,7 +114,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot", new CommandShoot(ballFondlerSubsystem));
     NamedCommands.registerCommand("stopShoot", new CommandStopShoot(ballFondlerSubsystem));
     NamedCommands.registerCommand("intake", new CommandIntake(ballFondlerSubsystem));
-    
+    NamedCommands.registerCommand("shootFeed", new CommandShootFeedSixty(ballFondlerSubsystem));
   }
 
   /**
@@ -142,7 +139,9 @@ public class RobotContainer {
     m_shooterController.a()
         .whileTrue(new CommandReverseIntake(ballFondlerSubsystem));
     m_shooterController.b()
-        .whileTrue(new CommandShootFeed(ballFondlerSubsystem));
+        .whileTrue(new CommandShootFeedSixty(ballFondlerSubsystem));
+    m_shooterController.x()
+        .whileTrue(new CommandShoot(ballFondlerSubsystem));
   }
 
   /**
@@ -153,7 +152,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     //return Autos.exampleAuto(ballFondlerSubsystem);
-    return getAutoFondler();
+    return getAutoSit();
   }
 
 
@@ -161,5 +160,9 @@ public class RobotContainer {
 
   public Command getAutoFondler() {
     return new PathPlannerAuto("AutoFondler");
+  }
+
+  public Command getAutoSit() {
+    return new PathPlannerAuto("AutoSit");
   }
 }

@@ -30,8 +30,24 @@ public class BallFondlerSubsystem extends SubsystemBase {
 
   // ===== SHOOTER =====
 
+  public void shooterOn(double d) {
+    shoot(-.6);
+  }
   public void shooterOn() {
-    shootingMotor.set(-.75);
+    shoot(-.75);
+  }
+
+  public void shootFeed(double d) {
+    shoot(d);
+    feed();
+  }
+
+  private void shoot(double value) {
+    shootingMotor.set(value);
+  }
+
+  public void sixtyShooter() {
+    shoot(-.6);
   }
 
   public void shootFeed() {
