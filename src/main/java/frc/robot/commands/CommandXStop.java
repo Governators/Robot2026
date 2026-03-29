@@ -1,27 +1,24 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.BallFondlerSubsystem;
+import frc.robot.subsystems.WheeeeelSubsystem;
 
-public class CommandShoot extends Command {
+public class CommandXStop extends Command {
 
-  private final BallFondlerSubsystem subsystem;
-
-  public CommandShoot(BallFondlerSubsystem subsystem) {
+  private final WheeeeelSubsystem subsystem;
+  public CommandXStop(WheeeeelSubsystem subsystem) {
     this.subsystem = subsystem;
     addRequirements(subsystem);
   }
 
-  // Calls shoot in BallFondlerSubsystem, with a short range rpm
   @Override
   public void execute() {
-    subsystem.shoot(ShooterConstants.kShortSetpoint);  
+    subsystem.setX();
   }
 
   @Override
   public void end(boolean interrupted) {
-    subsystem.stopAll();
   }
 
   @Override

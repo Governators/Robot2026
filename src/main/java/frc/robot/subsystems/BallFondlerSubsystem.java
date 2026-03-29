@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
-
 public class BallFondlerSubsystem extends SubsystemBase {
 
   private final SparkFlex shootingMotor;
@@ -31,27 +30,37 @@ public class BallFondlerSubsystem extends SubsystemBase {
     loadingMotor = new SparkMax(DriveConstants.kLoadingMotorCanId, MotorType.kBrushless);
     shootingMotor = new SparkFlex(DriveConstants.kShootingMotorCanId, MotorType.kBrushless);
     shootingController = shootingMotor.getClosedLoopController();
-  config = new SparkFlexConfig();
-  // Baseline PID/FF values for a NEO on a shooter (in RPM units). These are
-  // conservative starting values and should be tuned on the real robot.
-  double kP = 0.0002; // proportional
-  double kI = 0.000001; // integral
-  double kD = 0.0005; // derivative
-  // Feedforward: 1 / free speed (RPM) so that setpoint ~= free speed -> output 1.0
-  double kFF = 1.0 / frc.robot.Constants.NeoMotorConstants.kFreeSpeedRpm; // ~0.000176
+    config = new SparkFlexConfig();
+    // Baseline PID/FF values for a NEO on a shooter (in RPM units). These are
+    // conservative starting values and should be tuned on the real robot.
+    double kP = 0.0002; // proportional
+    double kI = 0.000001; // integral
+    double kD = 0.0005; // derivative
+    // Feedforward: 1 / free speed (RPM) so that setpoint ~= free speed -> output
+    // 1.0
+    double kFF = 1.0 / frc.robot.Constants.NeoMotorConstants.kFreeSpeedRpm; // ~0.000176
 
-  config.closedLoop
-    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-    .pid(kP, kI, kD)
-    .velocityFF(kFF)
-    .outputRange(-1, 1);
+    config.closedLoop
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .pid(kP, kI, kD)
+        .velocityFF(kFF)
+        .outputRange(-1, 1);
 
-  // Apply configuration to the motor and persist it so it survives power cycles.
-  shootingMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // Apply configuration to the motor and persist it so it survives power cycles.
+    shootingMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     stopAll();
   }
 
   // ===== SHOOTER =====
+
+  public void shootFeed(double d) {
+    shoot(d);
+    feed();
+  }
+
+  public void shoot(double d) {
+    shootingMotor.set(d);
+  }
 
   public void rpmShootFeed(double d) {
     rpmShoot(d);

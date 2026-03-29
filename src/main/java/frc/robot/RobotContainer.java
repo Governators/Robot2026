@@ -7,8 +7,10 @@ package frc.robot;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.commands.Autos;
 import frc.robot.commands.CommandShoot;
+import frc.robot.commands.CommandShootFeed;
 import frc.robot.commands.CommandShootRpmFeed;
 import frc.robot.commands.CommandStopShoot;
+import frc.robot.commands.CommandXStop;
 import frc.robot.subsystems.BallFondlerSubsystem;
 import frc.robot.subsystems.WheeeeelSubsystem;
 
@@ -128,6 +130,7 @@ public class RobotContainer {
    * PS4} controllers
    */
   private void configureBindings() {
+    m_driverController.x().whileTrue(new CommandXStop(m_robotDrive));
     m_shooterController.rightBumper()
         .whileTrue(new CommandShoot(ballFondlerSubsystem));
 
@@ -137,9 +140,11 @@ public class RobotContainer {
     m_shooterController.a()
         .whileTrue(new CommandReverseIntake(ballFondlerSubsystem));
     m_shooterController.b()
-        .whileTrue(new CommandShootRpmFeed(ballFondlerSubsystem, ShooterConstants.kShortRpm));
+        .whileTrue(new CommandShootFeed(ballFondlerSubsystem, ShooterConstants.kShortSetpoint));
     m_shooterController.x()
-        .whileTrue(new CommandShootRpmFeed(ballFondlerSubsystem, ShooterConstants.kLongRpm));
+        .whileTrue(new CommandShootFeed(ballFondlerSubsystem, ShooterConstants.kLongSetpoint));
+    m_shooterController.y()
+        .whileTrue(new CommandShootRpmFeed(ballFondlerSubsystem, ShooterConstants.kShortRpm));
   }
 
   /**
