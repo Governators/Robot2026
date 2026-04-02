@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.BallFondlerSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
-import frc.robot.subsystems.WheeeeelModule;
 import frc.robot.subsystems.WheeeeelSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 

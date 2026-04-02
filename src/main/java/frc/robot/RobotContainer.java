@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.NetworkingSubsystem;
 import frc.robot.subsystems.SubsystemRegistry;
+import frc.robot.subsystems.TargetAngleSubsystem;
 import frc.robot.commands.Autos;
 import frc.robot.commands.CommandShoot;
 import frc.robot.commands.CommandShootFeed;
@@ -42,6 +43,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final BallFondlerSubsystem ballFondlerSubsystem = new BallFondlerSubsystem();
   public final NetworkingSubsystem networkingSubsystem;
+  public final TargetAngleSubsystem targetAngleSubsystem;
 
   public final CommandXboxController m_driverController = new CommandXboxController(
       OIConstants.kDriverControllerPort); // kDriverControllerPort is int = 0
@@ -110,8 +112,8 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true),
             m_robotDrive));
-
-    networkingSubsystem = new NetworkingSubsystem(ballFondlerSubsystem, m_robotDrive);
+    targetAngleSubsystem = new TargetAngleSubsystem();
+    networkingSubsystem = new NetworkingSubsystem(ballFondlerSubsystem, m_robotDrive, targetAngleSubsystem);
     networkingSubsystem.initDashboards();
 
     configureBindings();

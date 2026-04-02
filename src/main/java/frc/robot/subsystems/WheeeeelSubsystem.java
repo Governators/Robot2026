@@ -22,7 +22,9 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Variables;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.TargetAngleSubsystem;
 import frc.utils.WheeeeelUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.studica.frc.AHRS;
@@ -208,6 +210,10 @@ public class WheeeeelSubsystem extends SubsystemBase {
 
     double xSpeedCommanded;
     double ySpeedCommanded;
+
+    if (SubsystemRegistry.targetAngleSubsystem.isTargeting()) {
+      rot = SubsystemRegistry.targetAngleSubsystem.getSetpoint(m_currentRotation);
+    }
 
     if (rateLimit) {
       // Convert XY to polar for rate limiting

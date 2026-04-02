@@ -25,9 +25,9 @@ public class BallFondlerSubsystem extends SubsystemBase {
 
   private final SparkClosedLoopController shootingController;
 
-  private final Double kP;
-  private final Double kI;
-  private final Double kD;
+  private  Double kP;
+  private  Double kI;
+  private  Double kD;
   private final Double kFF;
 
   public BallFondlerSubsystem() {
@@ -47,6 +47,10 @@ public class BallFondlerSubsystem extends SubsystemBase {
 
     applyConfig();
     stopAll();
+  }
+
+  @Override
+  public void periodic() {
   }
 
   public void applyConfig() {
@@ -103,6 +107,33 @@ public class BallFondlerSubsystem extends SubsystemBase {
   public void intakeForward() {
     intakeMotor.set(1);
     loadingMotor.set(1);
+  }
+
+  public double getKP() {
+    return kP;
+  }
+
+  public void setKP(double kP) {
+    this.kP = kP;
+    applyConfig();
+  }
+
+  public double getKI() {
+    return kI;
+  }
+
+  public void setKI(double kI) {
+    this.kI = kI;
+    applyConfig();
+  }
+
+  public double getKD() {
+    return kD;
+  }
+
+  public void setKD(double kD) {
+    this.kD = kD;
+    applyConfig();
   }
 
   public void intakeReverse() {

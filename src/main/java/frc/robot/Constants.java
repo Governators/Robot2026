@@ -165,33 +165,8 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 6284;
   }
 
-  public static final class ElevatorConstants {
- 
-
-    public static final class ElevatorSetpoints {
-      public static final int kFeederStation = 0;
-      
-      public static final double kLevel1 = -20.4;
-      public static final double kLevel2 = -30.2;
-      public static final double kLevel3 = -50.6;
-      //public static final double kLevel4 = 0;
-
-      public static final double kwristLevel1 = 0;
-      public static final double kwristLevel2 = 0;
-      public static final double kwristLevel3 = 0;
-      public static final double kwristLevel4 = 0;
-
-      public static final double kMaxHeight = 30;
-
-      public static final int kElevatorLimitSwitchPort = 69;
-      public static final double kTolerance = .5; //WE SHOULD SET THIS BETWEEN 0.25 to 1 inch
-      public static final double kWristTolerance = 5; //WE SHOULD SET THIS BETWEEN 1 to 5 degrees we think it's in degrees!
-    }
-    public static final class ElevatorPowerLevels {
-      public static final double kUp = 0.2;
-      public static final double kDown = -0.1;
-    }
-
+  public static final class FieldConstants {
+    public static final double blueGoalCenterX = 4.625;
+    public static final double blueGoalCenterY = 4.025;
   }
-
 }
