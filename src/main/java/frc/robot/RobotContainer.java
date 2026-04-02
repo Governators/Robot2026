@@ -5,6 +5,8 @@
 package frc.robot;
 
 import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.subsystems.NetworkingSubsystem;
+import frc.robot.subsystems.SubsystemRegistry;
 import frc.robot.commands.Autos;
 import frc.robot.commands.CommandShoot;
 import frc.robot.commands.CommandShootFeed;
@@ -39,6 +41,7 @@ import frc.robot.commands.CommandReverseIntake;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final BallFondlerSubsystem ballFondlerSubsystem = new BallFondlerSubsystem();
+  public final NetworkingSubsystem networkingSubsystem;
 
   public final CommandXboxController m_driverController = new CommandXboxController(
       OIConstants.kDriverControllerPort); // kDriverControllerPort is int = 0
@@ -46,12 +49,8 @@ public class RobotContainer {
   public WheeeeelSubsystem m_robotDrive;
 
   public final CommandXboxController m_shooterController = new CommandXboxController(
-    OIConstants.kShootControllerPort);
+      OIConstants.kShootControllerPort);
 
-  
-
-
-    
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -95,8 +94,9 @@ public class RobotContainer {
 
     // autoChooser = AutoBuilder.buildAutoChooser();
     // SmartDashboard.putData(autoChooser);
-
+    SubsystemRegistry.ballFondlerSubsystem = ballFondlerSubsystem;
     m_robotDrive = new WheeeeelSubsystem();
+    SubsystemRegistry.m_robotDrive = m_robotDrive;
 
     // configureButtonBindings();
 
@@ -110,11 +110,15 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true),
             m_robotDrive));
+
+    networkingSubsystem = new NetworkingSubsystem(ballFondlerSubsystem, m_robotDrive);
+    networkingSubsystem.initDashboards();
+
     configureBindings();
     NamedCommands.registerCommand("stopShoot", new CommandStopShoot(ballFondlerSubsystem));
     NamedCommands.registerCommand("intake", new CommandIntake(ballFondlerSubsystem));
-    NamedCommands.registerCommand("shootFeed", new CommandShootRpmFeed(ballFondlerSubsystem, ShooterConstants.kShortRpm));
-    ballFondlerSubsystem.rpmShoot(-2600);
+    NamedCommands.registerCommand("shootFeed",
+        new CommandShootRpmFeed(ballFondlerSubsystem, ShooterConstants.kShortRpm));
   }
 
   /**
@@ -154,12 +158,10 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    //return Autos.exampleAuto(ballFondlerSubsystem);
-    return getAutoFondler();
+    // return Autos.exampleAuto(ballFondlerSubsystem);
+    //return getAutoFondler();
+    return networkingSubsystem.getSelectedAutoCommand();
   }
-
-
-
 
   public Command getAutoFondler() {
     return new PathPlannerAuto("AutoFondler");

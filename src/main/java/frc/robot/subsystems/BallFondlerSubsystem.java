@@ -25,6 +25,11 @@ public class BallFondlerSubsystem extends SubsystemBase {
 
   private final SparkClosedLoopController shootingController;
 
+  private final Double kP;
+  private final Double kI;
+  private final Double kD;
+  private final Double kFF;
+
   public BallFondlerSubsystem() {
     intakeMotor = new SparkMax(DriveConstants.kIntakeMotorCanId, MotorType.kBrushless);
     loadingMotor = new SparkMax(DriveConstants.kLoadingMotorCanId, MotorType.kBrushless);
@@ -33,22 +38,25 @@ public class BallFondlerSubsystem extends SubsystemBase {
     config = new SparkFlexConfig();
     // Baseline PID/FF values for a NEO on a shooter (in RPM units). These are
     // conservative starting values and should be tuned on the real robot.
-    double kP = 0.0002; // proportional
-    double kI = 0.000001; // integral
-    double kD = 0.0005; // derivative
+    kP = 0.0002; // proportional
+    kI = 0.000001; // integral
+    kD = 0.0005; // derivative
     // Feedforward: 1 / free speed (RPM) so that setpoint ~= free speed -> output
     // 1.0
-    double kFF = 1.0 / frc.robot.Constants.NeoMotorConstants.kFreeSpeedRpm; // ~0.000176
+    kFF = 1.0 / frc.robot.Constants.FlexMotorConstants.kFreeSpeedRpm; // ~0.000176
 
+    applyConfig();
+    stopAll();
+  }
+
+  public void applyConfig() {
     config.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pid(kP, kI, kD)
         .velocityFF(kFF)
         .outputRange(-1, 1);
-
     // Apply configuration to the motor and persist it so it survives power cycles.
     shootingMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    stopAll();
   }
 
   // ===== SHOOTER =====
@@ -117,8 +125,10 @@ public class BallFondlerSubsystem extends SubsystemBase {
     shootingController.setSetpoint(0, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
   }
 
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber("Shooter RPM", shootingMotor.getEncoder().getVelocity());
+  // ===== DATA =====
+  public double getShooterVelocity() {
+    return shootingMotor.getEncoder().getVelocity();
   }
+
+  
 }

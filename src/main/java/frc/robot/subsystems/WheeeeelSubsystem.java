@@ -18,16 +18,18 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.utils.WheeeeelUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
-
 public class WheeeeelSubsystem extends SubsystemBase {
-  
+
   // Create MAXSwerveModules
   private final WheeeeelModule m_frontLeft = new WheeeeelModule(
       DriveConstants.kFrontLeftDrivingCanId,
@@ -65,7 +67,7 @@ public class WheeeeelSubsystem extends SubsystemBase {
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
       m_gyro.getRotation2d(),
-      //Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)),
+      // Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)),
       new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
@@ -73,11 +75,9 @@ public class WheeeeelSubsystem extends SubsystemBase {
           m_rearRight.getPosition()
       });
 
-
   /** Creates a new WheeeeelSubsystem. */
   public WheeeeelSubsystem() {
-
-    //Load the RobotConfig from the GUI settings
+    // Load the RobotConfig from the GUI settings
     RobotConfig config;
     try {
       config = RobotConfig.fromGUISettings();
@@ -87,20 +87,24 @@ public class WheeeeelSubsystem extends SubsystemBase {
     }
 
     AutoBuilder.configure(
-      this::getPose, // Robot pose supplier
-      this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
-      this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-      (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+        this::getPose, // Robot pose supplier
+        this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+        this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE
+                                                              // ChassisSpeeds
         new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-          new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-          new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-          //4.5, // Max module speed, in m/s
-          //0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-          //new ReplanningConfig() // Default path replanning config. See the API for the options here
+            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+        // 4.5, // Max module speed, in m/s
+        // 0.4, // Drive base radius in meters. Distance from robot center to furthest
+        // module.
+        // new ReplanningConfig() // Default path replanning config. See the API for the
+        // options here
         ),
         config, //
         () -> {
-          // Boolean supplier that controls when the path will be mirrored for the red alliance
+          // Boolean supplier that controls when the path will be mirrored for the red
+          // alliance
           // This will flip the path being followed to the red side of the field.
           // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
@@ -115,24 +119,44 @@ public class WheeeeelSubsystem extends SubsystemBase {
     m_gyro.resetDisplacement();
   }
 
-public ChassisSpeeds getRobotRelativeSpeeds(){
-   return DriveConstants.kDriveKinematics.toChassisSpeeds(
-       m_frontLeft.getState(),
-       m_frontRight.getState(),
-       m_rearLeft.getState(),
-       m_rearRight.getState()
-       );
-}
+  public WheeeeelModule getFrontLeft() {
+    return m_frontLeft;
+  }
 
-public void driveRobotRelative(ChassisSpeeds speeds) {
+  public WheeeeelModule getFrontRight() {
+    return m_frontRight;
+  }
+
+  public WheeeeelModule getRearLeft() {
+    return m_rearLeft;
+  }
+
+  public WheeeeelModule getRearRight() {
+    return m_rearRight;
+  }
+
+  public double getCurrentRotation() {
+    return m_currentRotation;
+  }
+
+  public ChassisSpeeds getRobotRelativeSpeeds() {
+    return DriveConstants.kDriveKinematics.toChassisSpeeds(
+        m_frontLeft.getState(),
+        m_frontRight.getState(),
+        m_rearLeft.getState(),
+        m_rearRight.getState());
+  }
+
+  public void driveRobotRelative(ChassisSpeeds speeds) {
     SwerveModuleState[] states = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
     this.setModuleStates(states);
-}
+  }
+
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        //Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)),
+        // Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)),
         m_gyro.getRotation2d(),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
@@ -140,6 +164,7 @@ public void driveRobotRelative(ChassisSpeeds speeds) {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
+
   }
 
   /**
@@ -158,7 +183,7 @@ public void driveRobotRelative(ChassisSpeeds speeds) {
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-        //Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)),
+        // Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)),
         m_gyro.getRotation2d(),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
@@ -180,7 +205,7 @@ public void driveRobotRelative(ChassisSpeeds speeds) {
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
-    
+
     double xSpeedCommanded;
     double ySpeedCommanded;
 
@@ -189,42 +214,40 @@ public void driveRobotRelative(ChassisSpeeds speeds) {
       double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
       double inputTranslationMag = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
 
-      // Calculate the direction slew rate based on an estimate of the lateral acceleration
+      // Calculate the direction slew rate based on an estimate of the lateral
+      // acceleration
       double directionSlewRate;
       if (m_currentTranslationMag != 0.0) {
         directionSlewRate = Math.abs(DriveConstants.kDirectionSlewRate / m_currentTranslationMag);
       } else {
-        directionSlewRate = 500.0; //some high number that means the slew rate is effectively instantaneous
+        directionSlewRate = 500.0; // some high number that means the slew rate is effectively instantaneous
       }
-      
 
       double currentTime = WPIUtilJNI.now() * 1e-6;
       double elapsedTime = currentTime - m_prevTime;
       double angleDif = WheeeeelUtils.AngleDifference(inputTranslationDir, m_currentTranslationDir);
-      if (angleDif < 0.45*Math.PI) {
-        m_currentTranslationDir = WheeeeelUtils.StepTowardsCircular(m_currentTranslationDir, inputTranslationDir, directionSlewRate * elapsedTime);
+      if (angleDif < 0.45 * Math.PI) {
+        m_currentTranslationDir = WheeeeelUtils.StepTowardsCircular(m_currentTranslationDir, inputTranslationDir,
+            directionSlewRate * elapsedTime);
         m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
-      }
-      else if (angleDif > 0.85*Math.PI) {
-        if (m_currentTranslationMag > 1e-4) { //some small number to avoid floating-point errors with equality checking
+      } else if (angleDif > 0.85 * Math.PI) {
+        if (m_currentTranslationMag > 1e-4) { // some small number to avoid floating-point errors with equality checking
           // keep currentTranslationDir unchanged
           m_currentTranslationMag = m_magLimiter.calculate(0.0);
-        }
-        else {
+        } else {
           m_currentTranslationDir = WheeeeelUtils.WrapAngle(m_currentTranslationDir + Math.PI);
           m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
         }
-      }
-      else {
-        m_currentTranslationDir = WheeeeelUtils.StepTowardsCircular(m_currentTranslationDir, inputTranslationDir, directionSlewRate * elapsedTime);
+      } else {
+        m_currentTranslationDir = WheeeeelUtils.StepTowardsCircular(m_currentTranslationDir, inputTranslationDir,
+            directionSlewRate * elapsedTime);
         m_currentTranslationMag = m_magLimiter.calculate(0.0);
       }
       m_prevTime = currentTime;
-      
+
       xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
       ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);
       m_currentRotation = m_rotLimiter.calculate(rot);
-
 
     } else {
       xSpeedCommanded = xSpeed;
@@ -239,7 +262,8 @@ public void driveRobotRelative(ChassisSpeeds speeds) {
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, m_gyro.getRotation2d())
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
+                m_gyro.getRotation2d())
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
@@ -292,7 +316,7 @@ public void driveRobotRelative(ChassisSpeeds speeds) {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    //return Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)).getDegrees();
+    // return Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)).getDegrees();
     return m_gyro.getRotation2d().getDegrees();
   }
 
@@ -302,11 +326,12 @@ public void driveRobotRelative(ChassisSpeeds speeds) {
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    //return m_gyro.getRate(IMUAxis.kZ) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    // return m_gyro.getRate(IMUAxis.kZ) * (DriveConstants.kGyroReversed ? -1.0 :
+    // 1.0);
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
-  public void resetHeading(){
+  public void resetHeading() {
     m_gyro.reset();
     m_gyro.setAngleAdjustment(getHeading());
   }

@@ -161,6 +161,10 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
   }
 
+  public static final class FlexMotorConstants {
+    public static final double kFreeSpeedRpm = 6284;
+  }
+
   public static final class ElevatorConstants {
  
 
