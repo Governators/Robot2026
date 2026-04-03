@@ -212,7 +212,7 @@ public class WheeeeelSubsystem extends SubsystemBase {
     double ySpeedCommanded;
 
     if (SubsystemRegistry.targetAngleSubsystem.isTargeting()) {
-      rot = SubsystemRegistry.targetAngleSubsystem.getSetpoint(m_currentRotation);
+      rot = SubsystemRegistry.targetAngleSubsystem.getSetpoint(getHeading());
     }
 
     if (rateLimit) {

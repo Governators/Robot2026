@@ -20,7 +20,8 @@ public class NetworkingSubsystem extends SubsystemBase {
     private final PowerDistribution pdu;
     private final Field2d dashField;
 
-    public NetworkingSubsystem(BallFondlerSubsystem ballFondlerSubsystem, WheeeeelSubsystem m_robotDrive, TargetAngleSubsystem targetAngleSubsystem) {
+    public NetworkingSubsystem(BallFondlerSubsystem ballFondlerSubsystem, WheeeeelSubsystem m_robotDrive,
+            TargetAngleSubsystem targetAngleSubsystem) {
         this.ballFondlerSubsystem = ballFondlerSubsystem;
         this.m_robotDrive = m_robotDrive;
         this.targetAngleSubsystem = targetAngleSubsystem;
@@ -47,17 +48,25 @@ public class NetworkingSubsystem extends SubsystemBase {
             public void initSendable(SendableBuilder builder) {
                 builder.setSmartDashboardType("SwerveDrive");
 
-                builder.addDoubleProperty("Front Left Angle", () -> m_robotDrive.getFrontLeft().getPositionTurning(), null);
-                builder.addDoubleProperty("Front Left Velocity", () -> m_robotDrive.getFrontLeft().getVelocityDrive(), null);
+                builder.addDoubleProperty("Front Left Angle", () -> m_robotDrive.getFrontLeft().getPositionTurning(),
+                        null);
+                builder.addDoubleProperty("Front Left Velocity", () -> m_robotDrive.getFrontLeft().getVelocityDrive(),
+                        null);
 
-                builder.addDoubleProperty("Front Right Angle", () -> m_robotDrive.getFrontRight().getPositionTurning(), null);
-                builder.addDoubleProperty("Front Right Velocity", () -> m_robotDrive.getFrontRight().getVelocityDrive(), null);
+                builder.addDoubleProperty("Front Right Angle", () -> m_robotDrive.getFrontRight().getPositionTurning(),
+                        null);
+                builder.addDoubleProperty("Front Right Velocity", () -> m_robotDrive.getFrontRight().getVelocityDrive(),
+                        null);
 
-                builder.addDoubleProperty("Back Left Angle", () -> m_robotDrive.getRearLeft().getPositionTurning(), null);
-                builder.addDoubleProperty("Back Left Velocity", () -> m_robotDrive.getRearLeft().getVelocityDrive(), null);
+                builder.addDoubleProperty("Back Left Angle", () -> m_robotDrive.getRearLeft().getPositionTurning(),
+                        null);
+                builder.addDoubleProperty("Back Left Velocity", () -> m_robotDrive.getRearLeft().getVelocityDrive(),
+                        null);
 
-                builder.addDoubleProperty("Back Right Angle", () -> m_robotDrive.getRearRight().getPositionTurning(), null);
-                builder.addDoubleProperty("Back Right Velocity", () -> m_robotDrive.getRearRight().getVelocityDrive(), null);
+                builder.addDoubleProperty("Back Right Angle", () -> m_robotDrive.getRearRight().getPositionTurning(),
+                        null);
+                builder.addDoubleProperty("Back Right Velocity", () -> m_robotDrive.getRearRight().getVelocityDrive(),
+                        null);
 
                 builder.addDoubleProperty("Robot Angle", () -> m_robotDrive.getCurrentRotation(), null);
             }
@@ -73,18 +82,20 @@ public class NetworkingSubsystem extends SubsystemBase {
     private void addSelectableAutos() {
         SmartDashboard.putData("Auto Selector", autoSelector);
     }
-    
+
     private void addDashField() {
         SmartDashboard.putData("Field2d", dashField);
     }
 
     private void addRotationalPid() {
-        SmartDashboard.putData("Rotational Pid", new Sendable() {
+        SmartDashboard.putData("Rotational Pid", SubsystemRegistry.targetAngleSubsystem.controller);
+        SmartDashboard.putData("Target Angle Settings", new Sendable() {
             @Override
             public void initSendable(SendableBuilder builder) {
-                builder.addDoubleProperty("kP", targetAngleSubsystem::getKP, targetAngleSubsystem::setKP);
-                builder.addDoubleProperty("kI", targetAngleSubsystem::getKI, targetAngleSubsystem::setKI);
-                builder.addDoubleProperty("kD", targetAngleSubsystem::getKD, targetAngleSubsystem::setKD);
+                TargetAngleSubsystem tas = SubsystemRegistry.targetAngleSubsystem;
+                builder.addBooleanProperty("isTargeting", tas::isTargeting, tas::setTargeting);
+                builder.addBooleanProperty("isTargetingCenter", tas::isTargetingCenter, tas::setTargetingCenter);
+                builder.addDoubleProperty("targetAngle", tas::getTargetAngle, tas::setTargetAngle);
             }
         });
     }
@@ -99,9 +110,11 @@ public class NetworkingSubsystem extends SubsystemBase {
             }
         });
     }
+
     private void addPdu() {
         SmartDashboard.putData("Pdu", pdu);
     }
+
     public Command getSelectedAutoCommand() {
         return SelectableAutoRegistry.getCommandByTitle(autoSelector.getSelected());
     }

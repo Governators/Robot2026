@@ -15,6 +15,11 @@ public class TargetAngleSubsystem extends SubsystemBase {
     public TargetAngleSubsystem() {
         isTargeting = false;
         isTargetingCenter = false;
+        controller.enableContinuousInput(-180, 180);
+    }
+
+    public double getTargetAngle() {
+        return targetAngle;
     }
     public void setTargetAngle(double newAngle) {
         targetAngle = newAngle;
@@ -24,10 +29,18 @@ public class TargetAngleSubsystem extends SubsystemBase {
         return isTargeting;
     }
 
+    public void setTargeting(boolean state) {
+        isTargeting = state;
+    }
+
+    public boolean isTargetingCenter() {
+        return isTargetingCenter;
+    }
+
     public void setTargetingCenter(boolean state) {
         isTargetingCenter = state;
     }
-    
+
     public void calculateCenterTarget() {
         targetAngle = 120; // TODO: actually implement
     }
@@ -37,8 +50,7 @@ public class TargetAngleSubsystem extends SubsystemBase {
         if (isTargetingCenter) {
             calculateCenterTarget();
         }
-        controller.calculate(currentAngle, targetAngle);
-        return controller.getSetpoint();
+        return controller.calculate(currentAngle, targetAngle);
     }
 
     public double getKP() {
@@ -64,5 +76,6 @@ public class TargetAngleSubsystem extends SubsystemBase {
     }
     private void applyConfig() {
         controller = new PIDController(kP, kI, kD);
+        controller.enableContinuousInput(-180, 180);
     }
 }

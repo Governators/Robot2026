@@ -113,6 +113,7 @@ public class RobotContainer {
                 true, true),
             m_robotDrive));
     targetAngleSubsystem = new TargetAngleSubsystem();
+    SubsystemRegistry.targetAngleSubsystem = targetAngleSubsystem;
     networkingSubsystem = new NetworkingSubsystem(ballFondlerSubsystem, m_robotDrive, targetAngleSubsystem);
     networkingSubsystem.initDashboards();
 
