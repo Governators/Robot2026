@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.CommandShootFeed;
 import frc.robot.subsystems.SubsystemRegistry;
 
 // a class to store all of ur autos, should only need to throw new ones in the map
@@ -21,8 +20,6 @@ public class SelectableAutoRegistry {
 
     private static void initMap() {
         map = new HashMap<>();
-        map.put("shoot backwards slow", () -> new CommandShootFeed(SubsystemRegistry.ballFondlerSubsystem, -.05));
-        map.put("shoot forwards slow", () -> new CommandShootFeed(SubsystemRegistry.ballFondlerSubsystem, .05));
     }
 
     public static List<String> getAutoTitles() {

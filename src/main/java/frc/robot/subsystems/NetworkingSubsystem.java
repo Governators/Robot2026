@@ -9,18 +9,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.TargetAngleSubsystem;
 import frc.robot.dashboard.SelectableAutoRegistry;
+import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.shoot.BallFondlerSubsystem;
 
 public class NetworkingSubsystem extends SubsystemBase {
     private final BallFondlerSubsystem ballFondlerSubsystem;
-    private final WheeeeelSubsystem m_robotDrive;
+    private final DriveSubsystem m_robotDrive;
     private final TargetAngleSubsystem targetAngleSubsystem;
     private final SendableChooser<String> autoSelector;
     private final PowerDistribution pdu;
     private final Field2d dashField;
+    private double shootRpm;
 
-    public NetworkingSubsystem(BallFondlerSubsystem ballFondlerSubsystem, WheeeeelSubsystem m_robotDrive,
+    public NetworkingSubsystem(BallFondlerSubsystem ballFondlerSubsystem, DriveSubsystem m_robotDrive,
             TargetAngleSubsystem targetAngleSubsystem) {
         this.ballFondlerSubsystem = ballFondlerSubsystem;
         this.m_robotDrive = m_robotDrive;
@@ -31,6 +33,7 @@ public class NetworkingSubsystem extends SubsystemBase {
         }
         pdu = new PowerDistribution(1, ModuleType.kRev);
         dashField = new Field2d();
+        shootRpm = 0;
     }
 
     public void initDashboards() {
@@ -40,6 +43,39 @@ public class NetworkingSubsystem extends SubsystemBase {
         addPdu();
         addPidFields();
         addRotationalPid();
+        addTurbo();
+        addCommands();
+    }
+
+    public void addCommands() {
+        SmartDashboard.putData("Shooter RPM control", new Sendable() {
+            @Override
+            public void initSendable(SendableBuilder builder) {
+                builder.addDoubleProperty("rpm", SubsystemRegistry.networkingSubsystem::getShootRpm, SubsystemRegistry.networkingSubsystem::setShootRpm);
+            }
+        });
+    }
+
+    public void addTurbo() {
+        SmartDashboard.putData("Turbo", new Sendable() {
+            @Override
+            public void initSendable(SendableBuilder builder) {
+                TurboSubsystem subsystem = SubsystemRegistry.turboSubsystem;
+                builder.addDoubleProperty("Current Max Speed (m-s)", subsystem::getCurrentMaxVelocity, null);
+                builder.addDoubleProperty("Current Max Angular Speed (rad-s)", subsystem::getCurrentMaxAngularSpeed, null);
+                builder.addDoubleProperty("Turbo Max Speed (m-s)", subsystem::getTurboMaxVelocity, subsystem::setTurboMaxVelocity);
+                builder.addDoubleProperty("Turbo Max Angular Speed (rad-s)", subsystem::getTurboMaxAngularSpeed, subsystem::setTurboMaxAngularSpeed);
+                builder.addBooleanProperty("Turbo Enabled", subsystem::getTurbo, subsystem::setTurbo);
+            }
+        });
+    }
+
+    public Double getShootRpm() {
+        return shootRpm;
+    }
+
+    public void setShootRpm(Double rpm) {
+        shootRpm = rpm;
     }
 
     private void addSwerveDrive() {

@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.drive;
 
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.config.PIDConstants;
@@ -30,25 +30,25 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
-public class WheeeeelSubsystem extends SubsystemBase {
+public class DriveSubsystem extends SubsystemBase {
 
   // Create MAXSwerveModules
-  private final WheeeeelModule m_frontLeft = new WheeeeelModule(
+  private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
       DriveConstants.kFrontLeftTurningCanId,
       DriveConstants.kFrontLeftChassisAngularOffset);
 
-  private final WheeeeelModule m_frontRight = new WheeeeelModule(
+  private final MAXSwerveModule m_frontRight = new MAXSwerveModule(
       DriveConstants.kFrontRightDrivingCanId,
       DriveConstants.kFrontRightTurningCanId,
       DriveConstants.kFrontRightChassisAngularOffset);
 
-  private final WheeeeelModule m_rearLeft = new WheeeeelModule(
+  private final MAXSwerveModule m_rearLeft = new MAXSwerveModule(
       DriveConstants.kRearLeftDrivingCanId,
       DriveConstants.kRearLeftTurningCanId,
       DriveConstants.kBackLeftChassisAngularOffset);
 
-  private final WheeeeelModule m_rearRight = new WheeeeelModule(
+  private final MAXSwerveModule m_rearRight = new MAXSwerveModule(
       DriveConstants.kRearRightDrivingCanId,
       DriveConstants.kRearRightTurningCanId,
       DriveConstants.kBackRightChassisAngularOffset);
@@ -78,7 +78,7 @@ public class WheeeeelSubsystem extends SubsystemBase {
       });
 
   /** Creates a new WheeeeelSubsystem. */
-  public WheeeeelSubsystem() {
+  public DriveSubsystem() {
     // Load the RobotConfig from the GUI settings
     RobotConfig config;
     try {
@@ -121,19 +121,19 @@ public class WheeeeelSubsystem extends SubsystemBase {
     m_gyro.resetDisplacement();
   }
 
-  public WheeeeelModule getFrontLeft() {
+  public MAXSwerveModule getFrontLeft() {
     return m_frontLeft;
   }
 
-  public WheeeeelModule getFrontRight() {
+  public MAXSwerveModule getFrontRight() {
     return m_frontRight;
   }
 
-  public WheeeeelModule getRearLeft() {
+  public MAXSwerveModule getRearLeft() {
     return m_rearLeft;
   }
 
-  public WheeeeelModule getRearRight() {
+  public MAXSwerveModule getRearRight() {
     return m_rearRight;
   }
 
@@ -210,11 +210,11 @@ public class WheeeeelSubsystem extends SubsystemBase {
 
     double xSpeedCommanded;
     double ySpeedCommanded;
-
-    if (SubsystemRegistry.targetAngleSubsystem.isTargeting()) {
-      rot = SubsystemRegistry.targetAngleSubsystem.getSetpoint(getHeading());
-    }
-
+    /*
+     * if (SubsystemRegistry.targetAngleSubsystem.isTargeting()) {
+     * rot = SubsystemRegistry.targetAngleSubsystem.getSetpoint(getHeading());
+     * }
+     */
     if (rateLimit) {
       // Convert XY to polar for rate limiting
       double inputTranslationDir = Math.atan2(ySpeed, xSpeed);

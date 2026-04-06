@@ -8,14 +8,11 @@ import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.NetworkingSubsystem;
 import frc.robot.subsystems.SubsystemRegistry;
 import frc.robot.subsystems.TargetAngleSubsystem;
-import frc.robot.commands.Autos;
-import frc.robot.commands.CommandShoot;
-import frc.robot.commands.CommandShootFeed;
-import frc.robot.commands.CommandShootRpmFeed;
-import frc.robot.commands.CommandStopShoot;
+import frc.robot.subsystems.TurboSubsystem;
+import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.shoot.BallFondlerSubsystem;
+import frc.robot.subsystems.shoot.ShootControlSubsystem;
 import frc.robot.commands.CommandXStop;
-import frc.robot.subsystems.BallFondlerSubsystem;
-import frc.robot.subsystems.WheeeeelSubsystem;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -26,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.Autos;
 import frc.robot.commands.CommandIntake;
 import frc.robot.commands.CommandReverseIntake;
 
@@ -44,11 +41,13 @@ public class RobotContainer {
   public final BallFondlerSubsystem ballFondlerSubsystem = new BallFondlerSubsystem();
   public final NetworkingSubsystem networkingSubsystem;
   public final TargetAngleSubsystem targetAngleSubsystem;
+  public final TurboSubsystem turboSubsystem;
+  public final ShootControlSubsystem shootControlSubsystem;
 
   public final CommandXboxController m_driverController = new CommandXboxController(
       OIConstants.kDriverControllerPort); // kDriverControllerPort is int = 0
 
-  public WheeeeelSubsystem m_robotDrive;
+  public DriveSubsystem m_robotDrive;
 
   public final CommandXboxController m_shooterController = new CommandXboxController(
       OIConstants.kShootControllerPort);
@@ -97,7 +96,7 @@ public class RobotContainer {
     // autoChooser = AutoBuilder.buildAutoChooser();
     // SmartDashboard.putData(autoChooser);
     SubsystemRegistry.ballFondlerSubsystem = ballFondlerSubsystem;
-    m_robotDrive = new WheeeeelSubsystem();
+    m_robotDrive = new DriveSubsystem();
     SubsystemRegistry.m_robotDrive = m_robotDrive;
 
     // configureButtonBindings();
@@ -113,15 +112,22 @@ public class RobotContainer {
                 true, true),
             m_robotDrive));
     targetAngleSubsystem = new TargetAngleSubsystem();
+    turboSubsystem = new TurboSubsystem();
+    shootControlSubsystem = new ShootControlSubsystem(ballFondlerSubsystem);
+    SubsystemRegistry.shootControlSubsystem = shootControlSubsystem;
+    
+    SubsystemRegistry.turboSubsystem = turboSubsystem;
     SubsystemRegistry.targetAngleSubsystem = targetAngleSubsystem;
     networkingSubsystem = new NetworkingSubsystem(ballFondlerSubsystem, m_robotDrive, targetAngleSubsystem);
+    SubsystemRegistry.networkingSubsystem = networkingSubsystem;
     networkingSubsystem.initDashboards();
 
+
     configureBindings();
-    NamedCommands.registerCommand("stopShoot", new CommandStopShoot(ballFondlerSubsystem));
+    NamedCommands.registerCommand("stopShoot", shootControlSubsystem.stopShooter());
     NamedCommands.registerCommand("intake", new CommandIntake(ballFondlerSubsystem));
     NamedCommands.registerCommand("shootFeed",
-        new CommandShootRpmFeed(ballFondlerSubsystem, ShooterConstants.kShortRpm));
+        Autos.shootFeed());
   }
 
   /**
@@ -138,8 +144,10 @@ public class RobotContainer {
    */
   private void configureBindings() {
     m_driverController.x().whileTrue(new CommandXStop(m_robotDrive));
+    m_driverController.leftBumper().whileTrue(turboSubsystem.getTurboCommand());
     m_shooterController.rightBumper()
-        .whileTrue(new CommandShoot(ballFondlerSubsystem));
+        .whileTrue(shootControlSubsystem.spoolShooter());
+    
 
     m_shooterController.leftBumper()
         .whileTrue(new CommandIntake(ballFondlerSubsystem));
@@ -147,11 +155,9 @@ public class RobotContainer {
     m_shooterController.a()
         .whileTrue(new CommandReverseIntake(ballFondlerSubsystem));
     m_shooterController.b()
-        .whileTrue(new CommandShootFeed(ballFondlerSubsystem, ShooterConstants.kShortSetpoint));
-    m_shooterController.x()
-        .whileTrue(new CommandShootFeed(ballFondlerSubsystem, ShooterConstants.kLongSetpoint));
+        .whileTrue(shootControlSubsystem.feed());
     m_shooterController.y()
-        .whileTrue(new CommandShootRpmFeed(ballFondlerSubsystem, ShooterConstants.kShortRpm));
+        .onChange(shootControlSubsystem.stopShooter());
   }
 
   /**

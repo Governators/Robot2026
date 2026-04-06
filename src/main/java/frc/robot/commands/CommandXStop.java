@@ -1,12 +1,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.WheeeeelSubsystem;
+import frc.robot.subsystems.drive.DriveSubsystem;
 
 public class CommandXStop extends Command {
 
-  private final WheeeeelSubsystem subsystem;
-  public CommandXStop(WheeeeelSubsystem subsystem) {
+  private final DriveSubsystem subsystem;
+  public CommandXStop(DriveSubsystem subsystem) {
     this.subsystem = subsystem;
     addRequirements(subsystem);
   }

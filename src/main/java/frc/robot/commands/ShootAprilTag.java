@@ -4,9 +4,9 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.BallFondlerSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
-import frc.robot.subsystems.WheeeeelSubsystem;
+import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.shoot.BallFondlerSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
@@ -14,7 +14,7 @@ public class ShootAprilTag extends Command {
   @SuppressWarnings("PMD.UnusedPrivateField")
   private final BallFondlerSubsystem m_subsystem;
   private final LimelightSubsystem limelight;
-  private final WheeeeelSubsystem drive;
+  private final DriveSubsystem drive;
 
 
 
@@ -24,7 +24,7 @@ public class ShootAprilTag extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ShootAprilTag(BallFondlerSubsystem subsystem, LimelightSubsystem limelight, WheeeeelSubsystem drive ) {
+  public ShootAprilTag(BallFondlerSubsystem subsystem, LimelightSubsystem limelight, DriveSubsystem drive ) {
     this.drive = drive;
     this.limelight = limelight;
     m_subsystem = subsystem;

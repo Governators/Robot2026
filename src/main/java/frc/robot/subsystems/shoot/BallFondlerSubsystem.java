@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.shoot;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
@@ -100,6 +100,7 @@ public class BallFondlerSubsystem extends SubsystemBase {
 
   public void shooterOff() {
     shootingController.setSetpoint(0, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+    shootingMotor.set(0);
   }
 
   // ===== INTAKE =====
@@ -154,6 +155,7 @@ public class BallFondlerSubsystem extends SubsystemBase {
     intakeMotor.set(0.0);
     loadingMotor.set(0.0);
     shootingController.setSetpoint(0, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+    shootingMotor.set(0);
   }
 
   // ===== DATA =====

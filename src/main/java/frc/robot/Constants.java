@@ -32,17 +32,18 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
   public static final class ShooterConstants {
-    public static final double kShortSetpoint = -.6;
-    public static final double kLongSetpoint = -.7;
-    public static final double kIdleRpm = -250;
-    public static final double kShortRpm = -2600;
-    public static final double kLongRpm = -3100;
+    public static final double kShortSetpoint = .6;
+    public static final double kLongSetpoint = .7;
+    public static final double kIdleRpm = 250;
+    public static final double kShortRpm = 3750;
+    public static final double kLongRpm = 3100;
   }
+
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
+    public static double kMaxSpeedMetersPerSecond = 3;
+    public static double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
     public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
@@ -65,7 +66,7 @@ public final class Constants {
     public static final double kBackLeftChassisAngularOffset = Math.PI;
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
-    //CAN IDs
+    // CAN IDs
 
     public static final int kFrontRightTurningCanId = 13;
     public static final int kFrontLeftTurningCanId = 11;
@@ -81,17 +82,20 @@ public final class Constants {
     public static final int kLoadingMotorCanId = 4;
     public static final int kShootingMotorCanId = 24; // bc 24 was kobe's jersey number
 
-    //Victor Can ids
+    // Victor Can ids
     public static final boolean kGyroReversed = false;
   }
 
   public static final class ModuleConstants {
-    // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
-    // This changes the drive speed of the module (a pinion gear with more teeth will result in a
+    // The MAXSwerve module can be configured with one of three pinion gears: 12T,
+    // 13T, or 14T.
+    // This changes the drive speed of the module (a pinion gear with more teeth
+    // will result in a
     // robot that drives faster).
-    public static final int kDrivingMotorPinionTeeth = 13; //DO NOT CHANGE!!!!!!!!
+    public static final int kDrivingMotorPinionTeeth = 13; // DO NOT CHANGE!!!!!!!!
 
-    // Invert the turning encoder, since the output shaft rotates in the opposite direction of
+    // Invert the turning encoder, since the output shaft rotates in the opposite
+    // direction of
     // the steering motor in the MAXSwerve Module.
     public static final boolean kTurningEncoderInverted = true;
 
@@ -99,7 +103,8 @@ public final class Constants {
     public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
     public static final double kWheelDiameterMeters = 0.0762;
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
-    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
+    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
+    // teeth on the bevel pinion
     public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
     public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
         / kDrivingMotorReduction;
@@ -139,7 +144,7 @@ public final class Constants {
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kShootControllerPort = 1;
-    public static final double kDriveDeadband = 0.05; 
+    public static final double kDriveDeadband = 0.05;
   }
 
   public static final class AutoConstants {

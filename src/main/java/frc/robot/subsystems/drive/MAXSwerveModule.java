@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.drive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -11,15 +11,13 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 
 import frc.robot.Configs;
 
-public class WheeeeelModule {
+public class MAXSwerveModule {
   private final SparkMax m_drivingSpark;
   private final SparkMax m_turningSpark;
 
@@ -38,7 +36,7 @@ public class WheeeeelModule {
    * MAXSwerve Module built with NEOs, SPARKS MAX, and a Through Bore
    * Encoder.
    */
-  public WheeeeelModule(int drivingCANId, int turningCANId, double chassisAngularOffset) {
+  public MAXSwerveModule(int drivingCANId, int turningCANId, double chassisAngularOffset) {
     m_drivingSpark = new SparkMax(drivingCANId, MotorType.kBrushless);
     m_turningSpark = new SparkMax(turningCANId, MotorType.kBrushless);
 
