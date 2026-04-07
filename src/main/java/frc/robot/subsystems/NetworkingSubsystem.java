@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CameraServerJNI;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -37,6 +39,7 @@ public class NetworkingSubsystem extends SubsystemBase {
     }
 
     public void initDashboards() {
+        addCameras();
         addSwerveDrive();
         addSelectableAutos();
         addDashField();
@@ -45,6 +48,10 @@ public class NetworkingSubsystem extends SubsystemBase {
         addRotationalPid();
         addTurbo();
         addCommands();
+    }
+
+    public void addCameras() {
+        CameraServer.startAutomaticCapture();
     }
 
     public void addCommands() {

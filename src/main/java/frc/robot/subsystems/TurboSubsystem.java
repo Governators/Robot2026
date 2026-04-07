@@ -11,24 +11,9 @@ public class TurboSubsystem extends SubsystemBase {
     private static double turboMaxVelocity = 4.5;
     private static double turboMaxAngularSpeed = 4*Math.PI;
     private boolean turboActivated;
-    private long lastEnableMs;
 
     public TurboSubsystem() {
         turboActivated = false;
-        lastEnableMs = 0;
-    }
-
-    @Override 
-    public void periodic() {
-        // timeout of 5s
-        if (System.currentTimeMillis()-lastEnableMs < 5000 && turboActivated) {
-            DriveConstants.kMaxSpeedMetersPerSecond = turboMaxVelocity;
-            DriveConstants.kMaxAngularSpeed = turboMaxAngularSpeed;
-        } else {
-            turboActivated = false;
-            DriveConstants.kMaxAngularSpeed = defaultMaxAngularSpeed;
-            DriveConstants.kMaxSpeedMetersPerSecond = defaultMaxVelocity;
-        }
     }
 
     public boolean getTurbo() {
@@ -44,12 +29,13 @@ public class TurboSubsystem extends SubsystemBase {
     }
 
     public void enableTurbo() {
-        turboActivated = true;
-        lastEnableMs = System.currentTimeMillis();
+        DriveConstants.kMaxAngularSpeed = turboMaxAngularSpeed;
+        DriveConstants.kMaxSpeedMetersPerSecond = turboMaxVelocity;
     }
 
     public void disableTurbo() {
-        turboActivated = false;
+        DriveConstants.kMaxAngularSpeed = defaultMaxAngularSpeed;
+        DriveConstants.kMaxSpeedMetersPerSecond = defaultMaxVelocity;
     }
 
     public double getCurrentMaxVelocity() {
@@ -84,7 +70,11 @@ public class TurboSubsystem extends SubsystemBase {
 
             @Override
             public boolean isFinished() {
-                return true;
+                return false;
+            }
+            @Override
+            public void end(boolean isInterrupted) {
+                SubsystemRegistry.turboSubsystem.disableTurbo();
             }
         };
     }

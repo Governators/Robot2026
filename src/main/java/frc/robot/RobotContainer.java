@@ -115,13 +115,12 @@ public class RobotContainer {
     turboSubsystem = new TurboSubsystem();
     shootControlSubsystem = new ShootControlSubsystem(ballFondlerSubsystem);
     SubsystemRegistry.shootControlSubsystem = shootControlSubsystem;
-    
+
     SubsystemRegistry.turboSubsystem = turboSubsystem;
     SubsystemRegistry.targetAngleSubsystem = targetAngleSubsystem;
     networkingSubsystem = new NetworkingSubsystem(ballFondlerSubsystem, m_robotDrive, targetAngleSubsystem);
     SubsystemRegistry.networkingSubsystem = networkingSubsystem;
     networkingSubsystem.initDashboards();
-
 
     configureBindings();
     NamedCommands.registerCommand("stopShoot", shootControlSubsystem.stopShooter());
@@ -147,8 +146,6 @@ public class RobotContainer {
     m_driverController.leftBumper().whileTrue(turboSubsystem.getTurboCommand());
     m_shooterController.rightBumper()
         .whileTrue(shootControlSubsystem.spoolShooter());
-    
-
     m_shooterController.leftBumper()
         .whileTrue(new CommandIntake(ballFondlerSubsystem));
 
@@ -168,7 +165,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     // return Autos.exampleAuto(ballFondlerSubsystem);
-    //return getAutoFondler();
+    // return getAutoFondler();
     return networkingSubsystem.getSelectedAutoCommand();
   }
 
