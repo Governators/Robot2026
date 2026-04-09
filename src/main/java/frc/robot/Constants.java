@@ -37,6 +37,8 @@ public final class Constants {
     public static final double kIdleRpm = 250;
     public static final double kShortRpm = 3750;
     public static final double kLongRpm = 3100;
+    
+    public static final double kCustomRpmStep = 250;
   }
 
   public static final class DriveConstants {

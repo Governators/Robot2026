@@ -9,9 +9,19 @@ public class ShootControlSubsystem extends SubsystemBase {
     private final BallFondlerSubsystem subsystem;
     private boolean shooterEnabled;
     private double lastEnableMs;
+    private double customRpm;
 
     public ShootControlSubsystem(BallFondlerSubsystem subsystem) {
         this.subsystem = subsystem;
+        customRpm = ShooterConstants.kShortRpm;
+    }
+
+    public double getCustomRpm() {
+        return customRpm;
+    }
+
+    public void setCustomRpm(double customRpm) {
+        this.customRpm = customRpm;
     }
 
     public Command shootRoutine() {
@@ -20,6 +30,19 @@ public class ShootControlSubsystem extends SubsystemBase {
             public void execute() {
             shooterEnabled = !shooterEnabled;
             lastEnableMs = System.currentTimeMillis();
+            }
+            @Override
+            public boolean isFinished() {
+                return true;
+            }
+        };
+    }
+
+    public Command spoolCustom() {
+        return new Command() {
+            @Override
+            public void execute() {
+                subsystem.rpmShoot(customRpm);
             }
             @Override
             public boolean isFinished() {
@@ -108,7 +131,7 @@ public class ShootControlSubsystem extends SubsystemBase {
             }
             @Override
             public void end(boolean isInterrupted) {
-                subsystem.stopAll();
+                subsystem.stopYoink();
             }
         };
     }

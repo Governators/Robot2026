@@ -26,6 +26,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.CommandDecrement;
+import frc.robot.commands.CommandIncrement;
 import frc.robot.commands.CommandIntake;
 import frc.robot.commands.CommandReverseIntake;
 
@@ -119,7 +121,9 @@ public class RobotContainer {
             m_robotDrive));
     targetAngleSubsystem = new TargetAngleSubsystem();
     turboSubsystem = new TurboSubsystem();
+
     shootControlSubsystem = new ShootControlSubsystem(ballFondlerSubsystem);
+
     SubsystemRegistry.shootControlSubsystem = shootControlSubsystem;
 
     SubsystemRegistry.turboSubsystem = turboSubsystem;
@@ -154,6 +158,11 @@ public class RobotContainer {
         .whileTrue(shootControlSubsystem.spoolShooter());
     m_shooterController.leftBumper()
         .whileTrue(new CommandIntake(ballFondlerSubsystem));
+
+    m_shooterController.povUp().onTrue(new CommandIncrement());
+    m_shooterController.povDown().onTrue(new CommandDecrement());
+
+    m_shooterController.povRight().onTrue(shootControlSubsystem.spoolCustom());
 
     m_shooterController.a()
         .whileTrue(new CommandReverseIntake(ballFondlerSubsystem));

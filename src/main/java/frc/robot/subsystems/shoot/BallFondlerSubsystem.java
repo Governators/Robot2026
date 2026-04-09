@@ -92,6 +92,11 @@ public class BallFondlerSubsystem extends SubsystemBase {
     loadingMotor.set(1);
   }
 
+  public void stopYoink() {
+    intakeMotor.set(0);
+    loadingMotor.set(0);
+  }
+
   public void stopShootFeed() {
     stopFeed();
     shooterOff();
