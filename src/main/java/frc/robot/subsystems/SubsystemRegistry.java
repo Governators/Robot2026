@@ -11,4 +11,5 @@ public class SubsystemRegistry {
     public static NetworkingSubsystem networkingSubsystem;
     public static TurboSubsystem turboSubsystem;
     public static ShootControlSubsystem shootControlSubsystem;
+    public static WiggleSubsystem wiggleSubsystem;
 }

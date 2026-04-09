@@ -96,6 +96,23 @@ public class ShootControlSubsystem extends SubsystemBase {
         };
     }
 
+    public Command zoinks() {
+        return new Command() {
+            @Override
+            public void execute() {
+                subsystem.yoink();
+            }
+            @Override
+            public boolean isFinished() {
+                return false;
+            }
+            @Override
+            public void end(boolean isInterrupted) {
+                subsystem.stopAll();
+            }
+        };
+    }
+
     public Command shootFeed() {
         return new Command() {
             @Override

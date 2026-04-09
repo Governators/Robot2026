@@ -4,6 +4,9 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.FeedbackSensor;
+
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -51,6 +54,7 @@ public class BallFondlerSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    Logger.recordOutput("test", "hello world!");
   }
 
   public void applyConfig() {
@@ -81,6 +85,11 @@ public class BallFondlerSubsystem extends SubsystemBase {
 
   public void rpmShoot(double d) {
     shootingController.setSetpoint(d, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+  }
+
+  public void yoink() {
+    intakeMotor.set(-1);
+    loadingMotor.set(1);
   }
 
   public void stopShootFeed() {

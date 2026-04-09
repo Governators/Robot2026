@@ -9,6 +9,7 @@ import frc.robot.subsystems.NetworkingSubsystem;
 import frc.robot.subsystems.SubsystemRegistry;
 import frc.robot.subsystems.TargetAngleSubsystem;
 import frc.robot.subsystems.TurboSubsystem;
+import frc.robot.subsystems.WiggleSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.shoot.BallFondlerSubsystem;
 import frc.robot.subsystems.shoot.ShootControlSubsystem;
@@ -20,6 +21,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
@@ -43,6 +45,7 @@ public class RobotContainer {
   public final TargetAngleSubsystem targetAngleSubsystem;
   public final TurboSubsystem turboSubsystem;
   public final ShootControlSubsystem shootControlSubsystem;
+  public final WiggleSubsystem wiggleSubsystem;
 
   public final CommandXboxController m_driverController = new CommandXboxController(
       OIConstants.kDriverControllerPort); // kDriverControllerPort is int = 0
@@ -51,6 +54,7 @@ public class RobotContainer {
 
   public final CommandXboxController m_shooterController = new CommandXboxController(
       OIConstants.kShootControllerPort);
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -98,6 +102,8 @@ public class RobotContainer {
     SubsystemRegistry.ballFondlerSubsystem = ballFondlerSubsystem;
     m_robotDrive = new DriveSubsystem();
     SubsystemRegistry.m_robotDrive = m_robotDrive;
+    this.wiggleSubsystem = new WiggleSubsystem();
+    SubsystemRegistry.wiggleSubsystem = this.wiggleSubsystem;
 
     // configureButtonBindings();
 
@@ -153,8 +159,11 @@ public class RobotContainer {
         .whileTrue(new CommandReverseIntake(ballFondlerSubsystem));
     m_shooterController.b()
         .whileTrue(shootControlSubsystem.feed());
+    m_shooterController.x()
+        .whileTrue(shootControlSubsystem.zoinks());
     m_shooterController.y()
         .onChange(shootControlSubsystem.stopShooter());
+    m_driverController.b().whileTrue(wiggleSubsystem.getCommand());
   }
 
   /**

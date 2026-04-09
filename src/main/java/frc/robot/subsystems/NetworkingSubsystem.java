@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CameraServerJNI;
 import edu.wpi.first.util.sendable.Sendable;
