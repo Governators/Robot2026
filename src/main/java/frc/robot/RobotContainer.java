@@ -137,6 +137,20 @@ public class RobotContainer {
     NamedCommands.registerCommand("intake", new CommandIntake(ballFondlerSubsystem));
     NamedCommands.registerCommand("shootFeed",
         Autos.shootFeed());
+    NamedCommands.registerCommand("feed", new Command() {
+      @Override
+      public void execute() {
+        ballFondlerSubsystem.feed();
+      }
+      @Override
+      public boolean isFinished() {
+        return false;
+      }
+      @Override
+      public void end(boolean isInterrupted) {
+        ballFondlerSubsystem.stopFeed();
+      } 
+    });
   }
 
   /**
@@ -184,7 +198,7 @@ public class RobotContainer {
     // An example command will be run in autonomous
     // return Autos.exampleAuto(ballFondlerSubsystem);
     // return getAutoFondler();
-    return networkingSubsystem.getSelectedAutoCommand();
+    return new PathPlannerAuto("AutoFondler");
   }
 
   public Command getAutoFondler() {

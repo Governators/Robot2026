@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CameraServerJNI;
 import edu.wpi.first.util.sendable.Sendable;
@@ -22,7 +24,7 @@ public class NetworkingSubsystem extends SubsystemBase {
     private final BallFondlerSubsystem ballFondlerSubsystem;
     private final DriveSubsystem m_robotDrive;
     private final TargetAngleSubsystem targetAngleSubsystem;
-    private final SendableChooser<String> autoSelector;
+    private final SendableChooser<Command> autoSelector;
     private final PowerDistribution pdu;
     private final Field2d dashField;
     private double shootRpm;
@@ -33,9 +35,7 @@ public class NetworkingSubsystem extends SubsystemBase {
         this.m_robotDrive = m_robotDrive;
         this.targetAngleSubsystem = targetAngleSubsystem;
         autoSelector = new SendableChooser<>();
-        for (String autoTitle : SelectableAutoRegistry.getAutoTitles()) {
-            autoSelector.addOption(autoTitle, autoTitle);
-        }
+        autoSelector.setDefaultOption("AutoFondler", new PathPlannerAuto("AutoFondler"));
         pdu = new PowerDistribution(1, ModuleType.kRev);
         dashField = new Field2d();
         shootRpm = 0;
@@ -162,7 +162,7 @@ public class NetworkingSubsystem extends SubsystemBase {
     }
 
     public Command getSelectedAutoCommand() {
-        return SelectableAutoRegistry.getCommandByTitle(autoSelector.getSelected());
+        return autoSelector.getSelected();
     }
 
     @Override
