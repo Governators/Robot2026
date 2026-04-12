@@ -105,7 +105,6 @@ public class ShootControlSubsystem extends SubsystemBase {
     }
 
     public Command spoolShooter() {
-        double rpm = SubsystemRegistry.networkingSubsystem.getShootRpm();
         return new Command() {
             @Override
             public void execute() {
@@ -114,7 +113,7 @@ public class ShootControlSubsystem extends SubsystemBase {
 
             @Override
             public boolean isFinished() {
-                return false;
+                return true;
             }
         };
     }

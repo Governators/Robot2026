@@ -7,7 +7,6 @@ package frc.robot;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.NetworkingSubsystem;
 import frc.robot.subsystems.SubsystemRegistry;
-import frc.robot.subsystems.TargetAngleSubsystem;
 import frc.robot.subsystems.TurboSubsystem;
 import frc.robot.subsystems.WiggleSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
@@ -19,6 +18,8 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -44,7 +45,6 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final BallFondlerSubsystem ballFondlerSubsystem = new BallFondlerSubsystem();
   public final NetworkingSubsystem networkingSubsystem;
-  public final TargetAngleSubsystem targetAngleSubsystem;
   public final TurboSubsystem turboSubsystem;
   public final ShootControlSubsystem shootControlSubsystem;
   public final WiggleSubsystem wiggleSubsystem;
@@ -88,6 +88,25 @@ public class RobotContainer {
      * 0));
      * NamedCommands.registerCommand("stopIntake", new stopIntake(slurper));
      */
+    NamedCommands.registerCommand("spoolShooter", shootControlSubsystem.spoolShooter());
+    NamedCommands.registerCommand("stopShoot", shootControlSubsystem.stopShooter());
+    NamedCommands.registerCommand("intake", new CommandIntake(ballFondlerSubsystem));
+    NamedCommands.registerCommand("shootFeed",
+        Autos.shootFeed());
+    NamedCommands.registerCommand("feed", new Command() {
+      @Override
+      public void execute() {
+        ballFondlerSubsystem.feed();
+      }
+      @Override
+      public boolean isFinished() {
+        return false;
+      }
+      @Override
+      public void end(boolean isInterrupted) {
+        ballFondlerSubsystem.stopFeed();
+      } 
+    });
 
   }
 
@@ -95,7 +114,6 @@ public class RobotContainer {
 
   public RobotContainer() {
     // Configure the trigger bindings
-    configureAutoCommands();
 
     // autoChooser = AutoBuilder.buildAutoChooser(auto);
 
@@ -119,7 +137,6 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true),
             m_robotDrive));
-    targetAngleSubsystem = new TargetAngleSubsystem();
     turboSubsystem = new TurboSubsystem();
 
     shootControlSubsystem = new ShootControlSubsystem(ballFondlerSubsystem);
@@ -127,30 +144,14 @@ public class RobotContainer {
     SubsystemRegistry.shootControlSubsystem = shootControlSubsystem;
 
     SubsystemRegistry.turboSubsystem = turboSubsystem;
-    SubsystemRegistry.targetAngleSubsystem = targetAngleSubsystem;
-    networkingSubsystem = new NetworkingSubsystem(ballFondlerSubsystem, m_robotDrive, targetAngleSubsystem);
+    networkingSubsystem = new NetworkingSubsystem(ballFondlerSubsystem, m_robotDrive);
     SubsystemRegistry.networkingSubsystem = networkingSubsystem;
     networkingSubsystem.initDashboards();
 
     configureBindings();
-    NamedCommands.registerCommand("stopShoot", shootControlSubsystem.stopShooter());
-    NamedCommands.registerCommand("intake", new CommandIntake(ballFondlerSubsystem));
-    NamedCommands.registerCommand("shootFeed",
-        Autos.shootFeed());
-    NamedCommands.registerCommand("feed", new Command() {
-      @Override
-      public void execute() {
-        ballFondlerSubsystem.feed();
-      }
-      @Override
-      public boolean isFinished() {
-        return false;
-      }
-      @Override
-      public void end(boolean isInterrupted) {
-        ballFondlerSubsystem.stopFeed();
-      } 
-    });
+        configureAutoCommands();
+
+    
   }
 
   /**
@@ -167,9 +168,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
     m_driverController.x().whileTrue(new CommandXStop(m_robotDrive));
-    m_driverController.leftBumper().whileTrue(turboSubsystem.getTurboCommand());
+    m_driverController.a().whileTrue(turboSubsystem.getTurboCommand());
     m_shooterController.rightBumper()
-        .whileTrue(shootControlSubsystem.spoolShooter());
+        .onTrue(shootControlSubsystem.spoolShooter());
     m_shooterController.leftBumper()
         .whileTrue(new CommandIntake(ballFondlerSubsystem));
 
@@ -198,7 +199,7 @@ public class RobotContainer {
     // An example command will be run in autonomous
     // return Autos.exampleAuto(ballFondlerSubsystem);
     // return getAutoFondler();
-    return new PathPlannerAuto("AutoFondler");
+    return new PathPlannerAuto("AutoMiddleShoot");
   }
 
   public Command getAutoFondler() {

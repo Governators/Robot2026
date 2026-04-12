@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "spoolShooter"
+          }
+        },
+        {
           "type": "race",
           "data": {
             "commands": [

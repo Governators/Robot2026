@@ -21,6 +21,7 @@ public class TurboSubsystem extends SubsystemBase {
     }
 
     public void setTurbo(boolean b) {
+        turboActivated = b;
         if (b) {
             enableTurbo();
         } else {
@@ -29,11 +30,13 @@ public class TurboSubsystem extends SubsystemBase {
     }
 
     public void enableTurbo() {
+        turboActivated = true;
         DriveConstants.kMaxAngularSpeed = turboMaxAngularSpeed;
         DriveConstants.kMaxSpeedMetersPerSecond = turboMaxVelocity;
     }
 
     public void disableTurbo() {
+        turboActivated = false;
         DriveConstants.kMaxAngularSpeed = defaultMaxAngularSpeed;
         DriveConstants.kMaxSpeedMetersPerSecond = defaultMaxVelocity;
     }
@@ -65,7 +68,7 @@ public class TurboSubsystem extends SubsystemBase {
         return new Command() {
             @Override
             public void execute() {
-                SubsystemRegistry.turboSubsystem.enableTurbo();
+                enableTurbo();
             }
 
             @Override
@@ -74,7 +77,7 @@ public class TurboSubsystem extends SubsystemBase {
             }
             @Override
             public void end(boolean isInterrupted) {
-                SubsystemRegistry.turboSubsystem.disableTurbo();
+                disableTurbo();
             }
         };
     }

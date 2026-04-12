@@ -31,14 +31,12 @@ import frc.robot.Variables;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.GlobalConstants;
 import frc.robot.LimelightHelpers;
-import frc.robot.subsystems.TargetAngleSubsystem;
 import frc.utils.WheeeeelUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
 public class DriveSubsystem extends SubsystemBase {
-  private final SwerveDrivePoseEstimator poseEstimator;
 
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
@@ -126,13 +124,6 @@ public class DriveSubsystem extends SubsystemBase {
         },
         this // Reference to this subsystem to set requirements
     );
-    poseEstimator = new SwerveDrivePoseEstimator(
-        DriveConstants.kDriveKinematics,
-        m_gyro.getRotation2d(),
-        getSwerveModulePositions(),
-
-        getPose() // initial pose
-    );
     m_gyro.resetDisplacement();
   }
 
@@ -198,33 +189,6 @@ public class DriveSubsystem extends SubsystemBase {
         m_rearLeft.getState()
     };
     Logger.recordOutput("SwerveStates/Setpoints", states);
-
-    Pose2d gyroMeasure = new Pose2d(m_gyro.getDisplacementX(), m_gyro.getDisplacementY(), m_gyro.getRotation2d());
-    Logger.recordOutput("gyro/poseEstimate", gyroMeasure);
-    Logger.recordOutput("gyro/xVelocityEstimate", m_gyro.getRobotCentricVelocityX());
-    Logger.recordOutput("gyro/yVelocityEstimate", m_gyro.getRobotCentricVelocityY());
-
-    String ll = "limelight";
-    LimelightHelpers.SetRobotOrientation(ll, this.getHeading(), 0, 0, 0, 0, 0);
-    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(ll);
-
-    double minTags = 1;
-    double minDist = 1;
-    double minAngularVel = 360;
-
-    double yawRateDegPerSec = m_gyro.getRate(); // degrees/sex
-    double omegaRadPerSec = Math.toRadians(yawRateDegPerSec);
-
-    boolean rejectUpdate = Math.abs(omegaRadPerSec) > Math.toRadians(minAngularVel) ||
-        mt2.tagCount < minTags ||
-        mt2.avgTagDist < minDist;
-
-    if (!rejectUpdate) {
-      poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, GlobalConstants.PlaceholderRadianVal)); // .1, .15,
-                                                                                                  // 360
-      addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
-    }
-
   }
 
   /**
@@ -253,10 +217,6 @@ public class DriveSubsystem extends SubsystemBase {
         },
         pose);
 
-  }
-
-  public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
-    poseEstimator.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds);
   }
 
   /**

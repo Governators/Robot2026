@@ -23,17 +23,14 @@ import frc.robot.subsystems.shoot.BallFondlerSubsystem;
 public class NetworkingSubsystem extends SubsystemBase {
     private final BallFondlerSubsystem ballFondlerSubsystem;
     private final DriveSubsystem m_robotDrive;
-    private final TargetAngleSubsystem targetAngleSubsystem;
     private final SendableChooser<Command> autoSelector;
     private final PowerDistribution pdu;
     private final Field2d dashField;
     private double shootRpm;
 
-    public NetworkingSubsystem(BallFondlerSubsystem ballFondlerSubsystem, DriveSubsystem m_robotDrive,
-            TargetAngleSubsystem targetAngleSubsystem) {
+    public NetworkingSubsystem(BallFondlerSubsystem ballFondlerSubsystem, DriveSubsystem m_robotDrive) {
         this.ballFondlerSubsystem = ballFondlerSubsystem;
         this.m_robotDrive = m_robotDrive;
-        this.targetAngleSubsystem = targetAngleSubsystem;
         autoSelector = new SendableChooser<>();
         autoSelector.setDefaultOption("AutoFondler", new PathPlannerAuto("AutoFondler"));
         pdu = new PowerDistribution(1, ModuleType.kRev);
@@ -48,7 +45,6 @@ public class NetworkingSubsystem extends SubsystemBase {
         addDashField();
         addPdu();
         addPidFields();
-        addRotationalPid();
         addTurbo();
         addCommands();
     }
@@ -131,19 +127,6 @@ public class NetworkingSubsystem extends SubsystemBase {
 
     private void addDashField() {
         SmartDashboard.putData("Field2d", dashField);
-    }
-
-    private void addRotationalPid() {
-        SmartDashboard.putData("Rotational Pid", SubsystemRegistry.targetAngleSubsystem.controller);
-        SmartDashboard.putData("Target Angle Settings", new Sendable() {
-            @Override
-            public void initSendable(SendableBuilder builder) {
-                TargetAngleSubsystem tas = SubsystemRegistry.targetAngleSubsystem;
-                builder.addBooleanProperty("isTargeting", tas::isTargeting, tas::setTargeting);
-                builder.addBooleanProperty("isTargetingCenter", tas::isTargetingCenter, tas::setTargetingCenter);
-                builder.addDoubleProperty("targetAngle", tas::getTargetAngle, tas::setTargetAngle);
-            }
-        });
     }
 
     private void addPidFields() {

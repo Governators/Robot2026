@@ -24,7 +24,7 @@ public class WiggleSubsystem extends SubsystemBase {
     public void periodic() {
         count++;
         if (wiggle) {
-            if ((count/10)%2==1) {
+            if ((count/6)%2==1) {
                 SubsystemRegistry.m_robotDrive.drive(0,0,1,true,true);
             } else {
                 SubsystemRegistry.m_robotDrive.drive(0,0,-1,true,true);
