@@ -63,31 +63,9 @@ public class RobotContainer {
    */
 
   public void configureAutoCommands() {
+    // create named commands.
+    // must be done before anything else, or pathplanner breaks
 
-    /*
-     * Here are our auto commands if you want to creat another auto command to make
-     * your auto do stuff
-     * you first need to create another command which I have helpfully created a
-     * command folder for
-     * go into the command folder copy an existing command and paste it into a new
-     * file
-     * it should be self explanitory from there
-     * All our auto/command stuff is stolen from 3939
-     * https://github.com/frc-team3939/2024-RobotCode/blob/main/2024-RobotCode/src/
-     * main/java/frc/robot/RobotContainer.java
-     * 
-     */
-    // Intake Commands
-
-    // JOEL DID THE SPEED TO .5
-    /*
-     * NamedCommands.registerCommand("startIntake", new startIntake(slurper));
-     * //just the one above this tho
-     * NamedCommands.registerCommand("shoot", new shoot(buper, slurper));
-     * // NamedCommands.registerCommand("stopShooter", new shoot(buper, slurper,
-     * 0));
-     * NamedCommands.registerCommand("stopIntake", new stopIntake(slurper));
-     */
     NamedCommands.registerCommand("spoolShooter", shootControlSubsystem.spoolShooter());
     NamedCommands.registerCommand("stopShoot", shootControlSubsystem.stopShooter());
     NamedCommands.registerCommand("intake", new CommandIntake(ballFondlerSubsystem));
@@ -107,7 +85,6 @@ public class RobotContainer {
         ballFondlerSubsystem.stopFeed();
       } 
     });
-
   }
 
   public final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
