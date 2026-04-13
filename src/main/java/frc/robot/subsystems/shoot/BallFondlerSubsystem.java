@@ -29,7 +29,7 @@ public class BallFondlerSubsystem extends SubsystemBase {
   private final SparkClosedLoopController shootingController;
 
   private  Double kP;
-  private  Double kI;
+  private  Double kI;             
   private  Double kD;
   private final Double kFF;
 
