@@ -1,7 +1,8 @@
 ---
 layout: default
 title: Configs.java
-nav_order: 2
+parent: Code
+nav_order: 1
 ---
 
 # Swerve Notes
