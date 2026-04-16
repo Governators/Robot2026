@@ -2,7 +2,7 @@
 layout: default
 title: Shooter Commands
 parent: Commands
-grand_parant: Code
+grand_parent: Code
 nav_order: 1
 ---
 
