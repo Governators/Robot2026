@@ -1,0 +1,11 @@
+title: "Governators Docs"
+description: "Docs for 3361"
+remote_theme: just-the-docs/just-the-docs
+color_scheme: dark
+
+plugins:
+  - jekyll-remote-theme
+
+# Build settings
+exclude:
+  - README.md
