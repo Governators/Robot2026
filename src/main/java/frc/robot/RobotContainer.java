@@ -89,20 +89,23 @@ public class RobotContainer {
 
   public final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
 
+  private void initializeSubsystems() {
+    
+  }
+
   public RobotContainer() {
-    // Configure the trigger bindings
-
-    // autoChooser = AutoBuilder.buildAutoChooser(auto);
-
-    // autoChooser = AutoBuilder.buildAutoChooser();
-    // SmartDashboard.putData(autoChooser);
     SubsystemRegistry.ballFondlerSubsystem = ballFondlerSubsystem;
     m_robotDrive = new DriveSubsystem();
     SubsystemRegistry.m_robotDrive = m_robotDrive;
     this.wiggleSubsystem = new WiggleSubsystem();
     SubsystemRegistry.wiggleSubsystem = this.wiggleSubsystem;
-
-    // configureButtonBindings();
+    turboSubsystem = new TurboSubsystem();
+    shootControlSubsystem = new ShootControlSubsystem(ballFondlerSubsystem);
+    SubsystemRegistry.shootControlSubsystem = shootControlSubsystem;
+    SubsystemRegistry.turboSubsystem = turboSubsystem;
+    networkingSubsystem = new NetworkingSubsystem(ballFondlerSubsystem, m_robotDrive);
+    SubsystemRegistry.networkingSubsystem = networkingSubsystem;
+    networkingSubsystem.initDashboards();
 
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
@@ -114,21 +117,9 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true),
             m_robotDrive));
-    turboSubsystem = new TurboSubsystem();
-
-    shootControlSubsystem = new ShootControlSubsystem(ballFondlerSubsystem);
-
-    SubsystemRegistry.shootControlSubsystem = shootControlSubsystem;
-
-    SubsystemRegistry.turboSubsystem = turboSubsystem;
-    networkingSubsystem = new NetworkingSubsystem(ballFondlerSubsystem, m_robotDrive);
-    SubsystemRegistry.networkingSubsystem = networkingSubsystem;
-    networkingSubsystem.initDashboards();
 
     configureBindings();
-        configureAutoCommands();
-
-    
+    configureAutoCommands();
   }
 
   /**
