@@ -5,7 +5,7 @@ parent: Code
 nav_order: 1
 ---
 
-# Swerve Notes
+# Configs.java
 
 <div class="field-section">
   <h3>Overview:</h3>
