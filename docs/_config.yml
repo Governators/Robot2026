@@ -3,6 +3,9 @@ description: "Docs for 3361"
 remote_theme: just-the-docs/just-the-docs
 color_scheme: dark
 
+url: "https://governators.github.io"
+baseurl: "/Robot2026"
+
 plugins:
   - jekyll-remote-theme
 
