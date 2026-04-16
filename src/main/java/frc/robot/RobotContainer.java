@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.CommandDecrement;
 import frc.robot.commands.CommandIncrement;
 import frc.robot.commands.CommandIntake;
@@ -69,8 +68,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("spoolShooter", shootControlSubsystem.spoolShooter());
     NamedCommands.registerCommand("stopShoot", shootControlSubsystem.stopShooter());
     NamedCommands.registerCommand("intake", new CommandIntake(ballFondlerSubsystem));
-    NamedCommands.registerCommand("shootFeed",
-        Autos.shootFeed());
     NamedCommands.registerCommand("feed", new Command() {
       @Override
       public void execute() {
